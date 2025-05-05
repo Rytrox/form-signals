@@ -1,0 +1,260 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "newProjectRoot": "projects",
+    "projects": {
+        "form-signals": {
+            "projectType": "library",
+            "root": "projects/form-signals",
+            "sourceRoot": "projects/form-signals/src",
+            "prefix": "lib",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "options": {
+                        "project": "projects/form-signals/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/form-signals/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/form-signals/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "tsConfig": "projects/form-signals/tsconfig.spec.json",
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ]
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/form-signals/**/*.ts",
+                            "projects/form-signals/**/*.html"
+                        ],
+                        "eslintConfig": "projects/form-signals/eslint.config.js"
+                    }
+                },
+                "cypress-run": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals:serve",
+                        "configFile": "projects/form-signals/cypress.config.js"
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "form-signals:serve:production"
+                        }
+                    }
+                },
+                "cypress-open": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "watch": true,
+                        "headless": false,
+                        "configFile": "projects/form-signals/cypress.config.js"
+                    }
+                },
+                "ct": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals:serve",
+                        "watch": true,
+                        "headless": false,
+                        "testingType": "component"
+                    },
+                    "configurations": {
+                        "development": {
+                            "devServerTarget": "form-signals:serve:development"
+                        }
+                    }
+                },
+                "e2e": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals:serve",
+                        "watch": true,
+                        "headless": false
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "form-signals:serve:production"
+                        }
+                    }
+                }
+            }
+        },
+        "form-signals-test-project": {
+            "projectType": "application",
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "projects/form-signals-test-project",
+            "sourceRoot": "projects/form-signals-test-project/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": "dist/form-signals-test-project",
+                        "index": "projects/form-signals-test-project/src/index.html",
+                        "browser": "projects/form-signals-test-project/src/main.ts",
+                        "polyfills": [
+                            "zone.js"
+                        ],
+                        "tsConfig": "projects/form-signals-test-project/tsconfig.app.json",
+                        "inlineStyleLanguage": "scss",
+                        "preserveSymlinks": true,
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "projects/form-signals-test-project/public"
+                            }
+                        ],
+                        "styles": [
+                            "@angular/material/prebuilt-themes/azure-blue.css",
+                            "projects/form-signals-test-project/src/styles.scss"
+                        ],
+                        "scripts": []
+                    },
+                    "configurations": {
+                        "production": {
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "500kB",
+                                    "maximumError": "1MB"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "2kB",
+                                    "maximumError": "4kB"
+                                }
+                            ],
+                            "outputHashing": "all"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "configurations": {
+                        "production": {
+                            "buildTarget": "form-signals-test-project:build:production"
+                        },
+                        "development": {
+                            "buildTarget": "form-signals-test-project:build:development"
+                        }
+                    },
+                    "defaultConfiguration": "development"
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n"
+                },
+                "test": {
+                    "builder": "@angular-devkit/build-angular:karma",
+                    "options": {
+                        "polyfills": [
+                            "zone.js",
+                            "zone.js/testing"
+                        ],
+                        "tsConfig": "projects/form-signals-test-project/tsconfig.spec.json",
+                        "inlineStyleLanguage": "scss",
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "projects/form-signals-test-project/public"
+                            }
+                        ],
+                        "styles": [
+                            "@angular/material/prebuilt-themes/azure-blue.css",
+                            "projects/form-signals-test-project/src/styles.scss"
+                        ],
+                        "scripts": []
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "projects/form-signals-test-project/**/*.ts",
+                            "projects/form-signals-test-project/**/*.html"
+                        ],
+                        "eslintConfig": "projects/form-signals-test-project/eslint.config.js"
+                    }
+                },
+                "cypress-run": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals-test-project:serve",
+                        "configFile": "projects/form-signals-test-project/cypress.config.js"
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "form-signals-test-project:serve:production"
+                        }
+                    }
+                },
+                "cypress-open": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "watch": true,
+                        "headless": false,
+                        "configFile": "projects/form-signals-test-project/cypress.config.js"
+                    }
+                },
+                "ct": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals-test-project:serve",
+                        "watch": true,
+                        "headless": false,
+                        "testingType": "component"
+                    },
+                    "configurations": {
+                        "development": {
+                            "devServerTarget": "form-signals-test-project:serve:development"
+                        }
+                    }
+                },
+                "e2e": {
+                    "builder": "@cypress/schematic:cypress",
+                    "options": {
+                        "devServerTarget": "form-signals-test-project:serve",
+                        "watch": true,
+                        "headless": false
+                    },
+                    "configurations": {
+                        "production": {
+                            "devServerTarget": "form-signals-test-project:serve:production"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "cli": {
+        "schematicCollections": [
+            "@cypress/schematic",
+            "@angular-eslint/schematics",
+            "@schematics/angular"
+        ],
+        "analytics": false
+    }
+}

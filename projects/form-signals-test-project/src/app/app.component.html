@@ -1,0 +1,121 @@
+<div>
+    <h1>Textbasierte Controls</h1>
+
+    <input [form]="group.text">
+    <input type="email" [form]="group.text">
+    <input type="password" [form]="group.text">
+    <input type="text" [form]="group.text">
+    <input type="search" [form]="group.text">
+    <input type="color" [form]="group.text">
+    <input type="tel" [form]="group.text">
+    <input type="url" [form]="group.text">
+
+    <input matInput [form]="group.text">
+    <textarea matInput [form]="group.text"></textarea>
+</div>
+
+<div>
+    <h1>Nummerbasierte Controls</h1>
+    <input type="number" [form]="group.number">
+</div>
+
+<div>
+    <h1>Checkbox</h1>
+    <input type="checkbox" [form]="group.boolean">
+    <mat-checkbox [form]="group.boolean" />
+
+    <mat-slide-toggle [form]="group.boolean">Slider</mat-slide-toggle>
+</div>
+
+<div>
+    <h1>Datumseingaben</h1>
+
+    <input type="date" [form]="group.date">
+    <input type="datetime-local" [form]="group.date">
+    <input type="time" [form]="group.date">
+</div>
+
+<div>
+    <h1>MatButtonToggleGroup</h1>
+
+    <mat-button-toggle-group [form]="group.developers.leader">
+        @for (developer of developers; track developer.id) {
+            <mat-button-toggle [value]="developer">{{developer.name}}</mat-button-toggle>
+        }
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group [form]="group.developers.members" multiple>
+        @for (developer of developers; track developer.id) {
+            <mat-button-toggle [value]="developer">{{developer.name}}</mat-button-toggle>
+        }
+    </mat-button-toggle-group>
+</div>
+
+<div>
+    <h1>Radio-Buttons</h1>
+
+    <div>
+        <input type="radio" value="Eins" [form]="group.radioText">
+        <input type="radio" value="Zwei" [form]="group.radioText">
+    </div>
+
+    <mat-radio-group [form]="group.radioText">
+        <mat-radio-button value="Eins">Eins</mat-radio-button>
+        <mat-radio-button value="Zwei">Zwei</mat-radio-button>
+    </mat-radio-group>
+</div>
+
+<div>
+    <h1>Nicht unterstützte Typen</h1>
+
+    <input type="button">
+    <input type="hidden">
+    <input type="month">
+    <input type="reset">
+    <input type="submit">
+    <input type="image" alt="Beispielbild als Input">
+    <input type="week">
+</div>
+
+<div>
+    <h1>Dateiupload</h1>
+
+    <input type="file" [form]="group.file">
+    <input type="file" multiple [form]="group.files">
+</div>
+
+<div>
+    <h1>Range</h1>
+
+    <input type="range" [form]="group.range">
+    <mat-slider>
+        <input matSliderThumb [form]="group.range">
+    </mat-slider>
+    <mat-slider>
+        <input matSliderStartThumb [form]="group.rangeMin">
+        <input matSliderEndThumb [form]="group.rangeMax">
+    </mat-slider>
+</div>
+
+<div>
+    <h1>Selects</h1>
+
+    <select [form]="group.select">
+        <option value="Test 1">Test 1</option>
+        <option value="Test 2">Test 2</option>
+    </select>
+
+    <mat-form-field>
+        <mat-select [form]="group.select">
+            <mat-option value="Hallo">Hallo</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select multiple [form]="group.selects">
+            <mat-option value="Test">Test</mat-option>
+            <mat-option value="Test2">Test2</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</div>
