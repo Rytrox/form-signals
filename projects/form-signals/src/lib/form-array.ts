@@ -2,7 +2,7 @@ import {createAbstractForm, Form} from "./form";
 import {ValidationErrors, ValidatorFn} from "./validator";
 import {computed} from "@angular/core";
 
-export interface FormArray<T, F extends Form<T, E>, E> extends Form<T[], FormArrayErrors<T, E>>, Iterable<F> {
+export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue<F>, FormArrayErrors<FormError<F>>>, Iterable<F> {
 
     /**
      * Returns the amount of elements inside this FormArray
@@ -19,7 +19,7 @@ export interface FormArray<T, F extends Form<T, E>, E> extends Form<T[], FormArr
      *
      * @param value the value of the form array
      */
-    push(value: T): void;
+    push(value: FormValue<F>): void;
 
     /**
      * Removes the last control of this FormArray and returns it.
@@ -28,11 +28,15 @@ export interface FormArray<T, F extends Form<T, E>, E> extends Form<T[], FormArr
 
 }
 
-export const formArrayFactory = <T, F extends Form<T, E>, E> (fn: (val: T) => F): (val: T[]) => FormArray<T, F, E> => {
+type FormError<F> = F extends Form<any, infer E> ? E : never;
+type FormValue<F> = F extends Form<infer T, any> ? T : never;
+type FormArrayValue<F> = F extends Form<infer T, any> ? T[] : never;
+
+export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<F>) => F): (val: FormArrayValue<F>) => FormArray<F> => {
     return val => {
         let controls = val.map(element => fn(element));
 
-        const form = createAbstractForm(computed(() => calcValue<T, F>(controls))) as FormArray<T, F, E>;
+        const form = createAbstractForm(computed(() => calcValue<F>(controls))) as FormArray<F>;
         Object.defineProperty(
             form,
             'length',
@@ -60,7 +64,7 @@ export const formArrayFactory = <T, F extends Form<T, E>, E> (fn: (val: T) => F)
         });
 
         Object.defineProperty(form, 'push', {
-            value: (value: T) => {
+            value: (value: FormValue<F>) => {
                 const control = fn(value);
 
                 Object.defineProperty(form, controls.push(control), {
@@ -91,8 +95,8 @@ export const formArrayFactory = <T, F extends Form<T, E>, E> (fn: (val: T) => F)
         Object.defineProperty(form, 'errors', {
             value: computed(() => {
                 // construct Error object
-                const groupErrors = calcGroupErrors<T>(form(), form.validators());
-                const controlErrors = calcControlErrors<T, F, E>(controls);
+                const groupErrors = calcGroupErrors<F>(form(), form.validators());
+                const controlErrors = calcControlErrors<F>(controls);
 
                 if (groupErrors === null && Object.keys(controlErrors).length === 0) {
                     return null;
@@ -101,12 +105,12 @@ export const formArrayFactory = <T, F extends Form<T, E>, E> (fn: (val: T) => F)
                 return {
                     this: groupErrors,
                     controls: controlErrors
-                } satisfies FormArrayErrors<T, E>;
+                } satisfies FormArrayErrors<F>;
             })
         });
 
         Object.defineProperty(form, 'set', {
-            value: (array: T[]) => {
+            value: (array: FormArrayValue<F>) => {
                 const properties = Object.fromEntries(
                     controls.map((_control, index) => {
                         return [index, {
@@ -135,11 +139,11 @@ export const formArrayFactory = <T, F extends Form<T, E>, E> (fn: (val: T) => F)
     }
 }
 
-const calcValue = <T, F extends Form<T, any>>(controls: F[]): T[] => {
-    return controls.map(control => control());
+const calcValue = <F extends Form<any, any>>(controls: F[]): FormArrayValue<F> => {
+    return controls.map(control => control()) as FormArrayValue<F>;
 }
 
-const calcGroupErrors = <T>(value: T[], validators: ValidatorFn<T[]>[]): ValidationErrors | null => {
+const calcGroupErrors = <F>(value: FormArrayValue<F>, validators: ValidatorFn<FormArrayValue<F>>[]): ValidationErrors | null => {
     const errors = validators.map(validator => validator(value))
         .filter((error): error is ValidationErrors => !!error);
 
@@ -150,12 +154,12 @@ const calcGroupErrors = <T>(value: T[], validators: ValidatorFn<T[]>[]): Validat
     return errors.reduce((error, current) => Object.assign(error, current), {});
 }
 
-const calcControlErrors = <T, F extends Form<T, E>, E>(controls: F[]): (E | null)[] => {
+const calcControlErrors = <F extends Form<any, any>>(controls: F[]): FormError<F>[] => {
     return controls.map(control => control.errors());
 }
 
 
-export interface FormArrayErrors<T extends {[K in keyof T]: T[K]}, E> {
+export interface FormArrayErrors<F> {
     this: ValidationErrors | null;
-    controls: (E | null)[]
+    controls: FormError<F>[]
 }
