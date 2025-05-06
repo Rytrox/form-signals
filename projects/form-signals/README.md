@@ -91,6 +91,7 @@ This table shows supported types on certain Components:
 | InputTextDirective            | Fallback for any other input and `<textarea ...>`                         | `FormControl<string>`                                                                |
 | MatButtonToggleGroupDirective | MatButtonToggleGroup                                                      | `FormControl<T>`                                                                     |
 | MatCheckboxDirective          | MatCheckbox                                                               | `FormControl<boolean>`                                                               |
+| MatDatepickerDirective        | `<input [matDatepicker]="..." ...>`                                       | `FormControl<D \| null>`                                                             |
 | MatRadioGroupDirective        | MatRadioGroup                                                             | `FormControl<T>`                                                                     |
 | MatSelectDirective            | MatSelect                                                                 | `FormControl<T \| null>`, `FormControl<T[]>` on multiple select                      |
 | MatSlideToggleDirective       | MatSlideToggle                                                            | `FormControl<boolean>`                                                               |

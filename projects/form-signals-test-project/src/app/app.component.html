@@ -33,6 +33,12 @@
     <input type="date" [form]="group.date">
     <input type="datetime-local" [form]="group.date">
     <input type="time" [form]="group.date">
+
+    <mat-form-field>
+        <input matInput [matDatepicker]="picker" [form]="group.date">
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+    </mat-form-field>
 </div>
 
 <div>

@@ -3,7 +3,7 @@ import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../form-control";
 
 @Directive({
-    selector: 'textarea[form], input:not([matSliderThumb]):not([matSliderStartThumb]):not([matSliderEndThumb]):not([type=number]):not([type=checkbox]):not([type=date]):not([type=datetime-local]):not([type=time]):not([type=radio]):not([type=range]):not([type=file])[form]',
+    selector: 'textarea[form], input:not([matDatepicker]):not([matSliderThumb]):not([matSliderStartThumb]):not([matSliderEndThumb]):not([type=number]):not([type=checkbox]):not([type=date]):not([type=datetime-local]):not([type=time]):not([type=radio]):not([type=range]):not([type=file])[form]',
     standalone: false
 })
 export class InputTextDirective extends AbstractFormDirective<string> {

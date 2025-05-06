@@ -15,6 +15,7 @@ import {MatSlideToggleDirective} from "./directives/material/mat-slide-toggle.di
 import {MatSelectDirective} from "./directives/material/mat-select.directive";
 import {MatButtonToggleGroupDirective} from "./directives/material/mat-button-toggle-group.directive";
 import {MatSliderRangeThumbDirective} from "./directives/material/mat-slider-range-thumb.directive";
+import {MatDatepickerDirective} from "./directives/material/mat-datepicker.directive";
 
 export * from './directives/input/input-checkbox.directive';
 export * from './directives/input/input-date.directive';
@@ -28,6 +29,7 @@ export * from './directives/select/select.directive';
 
 export * from './directives/material/mat-button-toggle-group.directive';
 export * from './directives/material/mat-checkbox.directive';
+export * from './directives/material/mat-datepicker.directive';
 export * from './directives/material/mat-radio-group.directive';
 export * from './directives/material/mat-select.directive';
 export * from './directives/material/mat-slide-toggle.directive';
@@ -48,6 +50,7 @@ export * from './directives/material/mat-slider-thumb.directive';
 
         MatButtonToggleGroupDirective,
         MatCheckboxDirective,
+        MatDatepickerDirective,
         MatRadioGroupDirective,
         MatSelectDirective,
         MatSlideToggleDirective,
@@ -70,6 +73,7 @@ export * from './directives/material/mat-slider-thumb.directive';
 
         MatButtonToggleGroupDirective,
         MatCheckboxDirective,
+        MatDatepickerDirective,
         MatRadioGroupDirective,
         MatSelectDirective,
         MatSlideToggleDirective,

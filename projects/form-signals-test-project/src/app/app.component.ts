@@ -1,7 +1,7 @@
 import {Component, effect} from '@angular/core';
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatRadioButton, MatRadioGroup} from "@angular/material/radio";
-import {MatFormField, MatInput} from "@angular/material/input";
+import {MatFormField, MatInput, MatSuffix} from "@angular/material/input";
 import {MatSlider, MatSliderRangeThumb, MatSliderThumb} from "@angular/material/slider";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {MatSelect, MatOption} from "@angular/material/select";
@@ -9,6 +9,8 @@ import {formGroupFactory} from "../../../form-signals/src/lib/form-group";
 import {formControl} from "../../../form-signals/src/lib/form-control";
 import { FormsModule } from '../../../form-signals/src/lib/forms.module';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {provideNativeDateAdapter} from "@angular/material/core";
 
 interface Developer {
     id: number;
@@ -92,7 +94,14 @@ export const TestGroup = formGroupFactory((val?: Test) => {
         MatOption,
         MatFormField,
         MatSliderRangeThumb,
-        MatButtonToggleModule
+        MatButtonToggleModule,
+        MatDatepickerToggle,
+        MatSuffix,
+        MatDatepicker,
+        MatDatepickerInput
+    ],
+    providers: [
+        provideNativeDateAdapter()
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
