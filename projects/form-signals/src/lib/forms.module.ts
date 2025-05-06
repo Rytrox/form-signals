@@ -17,6 +17,8 @@ import {MatButtonToggleGroupDirective} from "./directives/material/mat-button-to
 import {MatSliderRangeThumbDirective} from "./directives/material/mat-slider-range-thumb.directive";
 import {MatDatepickerDirective} from "./directives/material/mat-datepicker.directive";
 
+export * from './directives/abstract-form-directive';
+
 export * from './directives/input/input-checkbox.directive';
 export * from './directives/input/input-date.directive';
 export * from './directives/input/input-file.directive';
