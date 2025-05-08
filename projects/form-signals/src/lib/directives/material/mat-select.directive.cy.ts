@@ -1,6 +1,6 @@
 import {MatSelectModule} from "@angular/material/select";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 interface Developer {
@@ -63,6 +63,24 @@ describe('MatSelectDirective', () => {
             cy.wait(1).then(() => {
                 cy.wrap(form()).should('eq', developers[1]);
             });
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('mat-select')
+                .should('not.have.class', 'mat-mdc-select-disabled')
+                .then(() => {
+                    form.disabled.set(true);
+                    cy.wait(1).then(() => {
+                        cy.get('mat-select')
+                            .should('have.class', 'mat-mdc-select-disabled')
+                            .then(() => form.disabled.set(false));
+
+                        cy.wait(1).then(() => {
+                            cy.get('mat-select')
+                                .should('not.have.class', 'mat-mdc-select-disabled');
+                        });
+                    });
+                });
         });
     });
 
@@ -131,6 +149,24 @@ describe('MatSelectDirective', () => {
                     });
                 });
             });
-        })
-    })
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('mat-select')
+                .should('not.have.class', 'mat-mdc-select-disabled')
+                .then(() => {
+                    form.disabled.set(true);
+                    cy.wait(1).then(() => {
+                        cy.get('mat-select')
+                            .should('have.class', 'mat-mdc-select-disabled')
+                            .then(() => form.disabled.set(false));
+
+                        cy.wait(1).then(() => {
+                            cy.get('mat-select')
+                                .should('not.have.class', 'mat-mdc-select-disabled');
+                        });
+                    });
+                });
+        });
+    });
 });

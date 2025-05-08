@@ -1,4 +1,4 @@
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('InputDateDirective', () => {
@@ -46,6 +46,20 @@ describe('InputDateDirective', () => {
                 cy.wrap(form()).should('be.lte', new Date(Date.UTC(2020, 0, 1)));
             });
         });
+
+        it('should disable when form is disabled', () => {
+            cy.get('input').should('be.enabled');
+
+            form.disabled.set(true);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.disabled');
+
+                form.disabled.set(false);
+                cy.wait(1).then(() => {
+                    cy.get('input').should('be.enabled');
+                });
+            });
+        });
     });
 
     context('Time-Input', () => {
@@ -88,6 +102,20 @@ describe('InputDateDirective', () => {
             cy.wait(1).then(() => {
                 cy.wrap(form()).should('be.lte', new Date(Date.UTC(1970, 0, 1, 12, 30, 22)));
             });
-        })
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('input').should('be.enabled');
+
+            form.disabled.set(true);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.disabled');
+
+                form.disabled.set(false);
+                cy.wait(1).then(() => {
+                    cy.get('input').should('be.enabled');
+                });
+            });
+        });
     });
 });

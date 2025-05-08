@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'select[form]',
@@ -17,6 +17,7 @@ export class SelectDirective extends AbstractFormDirective<string> {
             const form = this.form();
 
             element.nativeElement.value = form();
+            element.nativeElement.disabled = form.disabled();
         });
     }
 

@@ -1,5 +1,5 @@
 import {MatCheckboxModule} from "@angular/material/checkbox";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('MatCheckboxDirective', () => {
@@ -29,5 +29,23 @@ describe('MatCheckboxDirective', () => {
         cy.wait(1).then(() => {
             cy.wrap(form()).should('be.false');
         });
+    });
+
+    it('should disable when form is disabled', () => {
+        cy.get('mat-checkbox')
+            .should('not.have.class', 'mat-mdc-checkbox-disabled')
+            .then(() => {
+                form.disabled.set(true);
+                cy.wait(1).then(() => {
+                    cy.get('mat-checkbox')
+                        .should('have.class', 'mat-mdc-checkbox-disabled')
+                        .then(() => form.disabled.set(false));
+
+                    cy.wait(1).then(() => {
+                        cy.get('mat-checkbox')
+                            .should('not.have.class', 'mat-mdc-checkbox-disabled');
+                    });
+                });
+            });
     });
 });

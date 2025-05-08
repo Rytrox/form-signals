@@ -1,7 +1,7 @@
 import {Directive, effect, input, OnDestroy} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatDatepickerInput} from "@angular/material/datepicker";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 import {Subscription} from "rxjs";
 
 @Directive({
@@ -21,6 +21,7 @@ export class MatDatepickerDirective<D> extends AbstractFormDirective<D | null> i
             const form = this.form();
 
             datePicker.writeValue(form());
+            datePicker.setDisabledState(form.disabled());
         });
 
         this.subscription.add(

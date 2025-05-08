@@ -1,5 +1,5 @@
 import {MatSliderModule} from "@angular/material/slider";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('MatSliderThumbDirective', () => {
@@ -34,6 +34,20 @@ describe('MatSliderThumbDirective', () => {
         cy.get('input').should('have.value', 20);
         cy.wait(1).then(() => {
             cy.wrap(form()).should('eq', 20);
+        });
+    });
+
+    it('should disable thumb when form is disabled', () => {
+        cy.get('input').should('be.enabled');
+
+        form.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('input').should('be.disabled');
+
+            form.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.enabled');
+            });
         });
     });
 });

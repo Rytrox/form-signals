@@ -1,6 +1,6 @@
 import {Directive, effect, forwardRef, HostListener, input} from '@angular/core';
 import {MatSliderRangeThumb} from "@angular/material/slider";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[matSliderStartThumb][form], input[matSliderEndThumb][form]',
@@ -23,6 +23,7 @@ export class MatSliderRangeThumbDirective extends MatSliderRangeThumb {
             const form = this.form();
 
             this.writeValue(form());
+            this.setDisabledState(form.disabled());
         });
     }
 

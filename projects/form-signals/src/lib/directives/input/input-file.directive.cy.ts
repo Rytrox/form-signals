@@ -1,4 +1,4 @@
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('InputFileDirective', () => {
@@ -39,6 +39,20 @@ describe('InputFileDirective', () => {
                     const inputFile = (input[0] as HTMLInputElement).files;
 
                     cy.wrap(inputFile!.length).should('eq', 1);
+                });
+            });
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('input').should('be.enabled');
+
+            form.disabled.set(true);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.disabled');
+
+                form.disabled.set(false);
+                cy.wait(1).then(() => {
+                    cy.get('input').should('be.enabled');
                 });
             });
         });
@@ -95,5 +109,19 @@ describe('InputFileDirective', () => {
                 });
             });
         });
-    })
+
+        it('should disable when form is disabled', () => {
+            cy.get('input').should('be.enabled');
+
+            form.disabled.set(true);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.disabled');
+
+                form.disabled.set(false);
+                cy.wait(1).then(() => {
+                    cy.get('input').should('be.enabled');
+                });
+            });
+        });
+    });
 });

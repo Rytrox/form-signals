@@ -1,7 +1,7 @@
 import {Directive, effect, HostListener, input, Self} from '@angular/core';
 import {MatCheckbox} from "@angular/material/checkbox";
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'mat-checkbox[form]',
@@ -21,6 +21,7 @@ export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
             const form = this.form();
 
             element.writeValue(form());
+            element.setDisabledState(form.disabled());
         });
     }
 

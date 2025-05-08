@@ -1,6 +1,8 @@
 import {createAbstractForm, Form} from "./form";
 import {computed} from "@angular/core";
 import {ValidationErrors, ValidatorFn} from "./validator";
+import {isFunction} from "lodash";
+import {isFormControl} from "./form-control";
 
 const forbiddenNames = [
     'addValidators',
@@ -22,6 +24,16 @@ export type FormGroup<T extends {[K in keyof T]: T[K]}, F extends TForm<T>> = Gr
      * @param control the control you want to add
      */
     setControl<K extends OptionalKeys<T>>(key: K, control: F[K] | null): void;
+
+    /**
+     * Disables all included Forms of this FormGroup
+     */
+    disable(): void;
+
+    /**
+     * Enables all included Forms of this FormGroup
+     */
+    enable(): void;
 };
 
 export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TForm<T>> (fn: (val?: T) => Required<F>): (val?: T) => FormGroup<T, F> => {
@@ -72,7 +84,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
 
         Object.defineProperty(form, 'setControl', {
             value: <K extends OptionalKeys<T>>(key: K, control: F[K] | null) => {
-                if (control !== null) {
+                if (control) {
                     controls[key] = control;
 
                     Object.defineProperty(form, key, {value: control, configurable: true});
@@ -82,6 +94,34 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
                 }
             }
         });
+
+        Object.defineProperty(form, 'disable', {
+            value: () => {
+                Object.values<Form<any, any> | undefined>(controls)
+                    .filter((control): control is Form<any, any> => !!control)
+                    .forEach(control => {
+                        if (isFormControl(control)) {
+                            control.disabled.set(true);
+                        } else if ('disable' in control && isFunction(control.disable)) {
+                            control.disable();
+                        }
+                    });
+            }
+        });
+
+        Object.defineProperty(form, 'enable', {
+            value: () => {
+                Object.values<Form<any, any> | undefined>(controls)
+                    .filter((control): control is Form<any, any> => !!control)
+                    .forEach(control => {
+                        if (isFormControl(control)) {
+                            control.disabled.set(false);
+                        } else if ('disable' in control && isFunction(control.disable)) {
+                            control.disable();
+                        }
+                    })
+            }
+        })
 
         return form;
     }

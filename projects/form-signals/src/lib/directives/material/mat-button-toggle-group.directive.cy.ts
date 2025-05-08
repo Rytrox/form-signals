@@ -1,5 +1,5 @@
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 interface Developer {
@@ -48,6 +48,7 @@ describe('MatButtonToggleGroupDirective', () => {
 
         beforeEach(() => {
             form.set(developers[1]);
+            form.disabled.set(false);
         })
 
         it('should select correct button by default', () => {
@@ -84,6 +85,24 @@ describe('MatButtonToggleGroupDirective', () => {
             cy.wait(1).then(() => {
                 cy.wrap(form()).should('eq', developers[0]);
             })
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('mat-button-toggle-group')
+                .should('have.attr', 'aria-disabled', 'false')
+                .then(() => {
+                    form.disabled.set(true);
+                    cy.wait(1).then(() => {
+                        cy.get('mat-button-toggle-group')
+                            .should('have.attr', 'aria-disabled', 'true')
+                            .then(() => form.disabled.set(false));
+
+                        cy.wait(1).then(() => {
+                            cy.get('mat-button-toggle-group')
+                                .should('have.attr', 'aria-disabled', 'false');
+                        });
+                    });
+                });
         });
     });
 
@@ -135,7 +154,25 @@ describe('MatButtonToggleGroupDirective', () => {
                     .and('include', developers[1])
                     .and('include', developers[2])
                     .and('not.include', developers[0]);
-            })
+            });
+        });
+
+        it('should disable when form is disabled', () => {
+            cy.get('mat-button-toggle-group')
+                .should('have.attr', 'aria-disabled', 'false')
+                .then(() => {
+                    form.disabled.set(true);
+                    cy.wait(1).then(() => {
+                        cy.get('mat-button-toggle-group')
+                            .should('have.attr', 'aria-disabled', 'true')
+                            .then(() => form.disabled.set(false));
+
+                        cy.wait(1).then(() => {
+                            cy.get('mat-button-toggle-group')
+                                .should('have.attr', 'aria-disabled', 'false');
+                        });
+                    });
+                });
         });
     })
 });

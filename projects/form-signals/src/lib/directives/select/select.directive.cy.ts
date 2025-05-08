@@ -1,4 +1,4 @@
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('SelectDirective', () => {
@@ -32,6 +32,20 @@ describe('SelectDirective', () => {
 
         cy.wait(1).then(() => {
             cy.wrap(form()).should('eq', 'Hello');
+        });
+    });
+
+    it('should disable when form is disabled', () => {
+        cy.get('select').should('be.enabled');
+
+        form.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('select').should('be.disabled');
+
+            form.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('select').should('be.enabled');
+            });
         });
     });
 });

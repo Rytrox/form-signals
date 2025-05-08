@@ -1,4 +1,4 @@
-# form-signals
+# Angular Form-Signals
 
 Simple Reimplementation of [Angular Forms](https://www.npmjs.com/package/@angular/forms) in Signals.
 Focused on simplicity, with full [Angular Material](https://www.npmjs.com/package/@angular/material) support. 
@@ -103,7 +103,7 @@ Usage of those Form-Directives are identical to `Angular-FormControl` / `ngModel
 For more information, have a look at the official [Angular Material Documentation](https://material.angular.dev/components/categories)
 
 #### Reacting to FormChanges
-Since all Forms are now `Signals`, you can use `effect`, `computed` etc. to react to Value changes inside Forms.
+Since all Forms are now `Signals`, you can use `effect`, `computed` etc. to react to value changes inside Forms.
 
 ```ts
 import {formControl} from '@rytrox/form-signals';
@@ -160,7 +160,7 @@ export const FooGroup = formGroupFactory((val?: Foo) => {
 });
 ```
 
-If a key is declared as optional, you can remove its control at any time by using `removeControl`. 
+If a key is declared as optional, you can remove its control at any time by using `setControl(null)`. 
 However, we must declare them inside our factory.
 
 Now, we can create a FormGroup like this:

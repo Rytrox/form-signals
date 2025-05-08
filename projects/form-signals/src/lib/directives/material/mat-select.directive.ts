@@ -1,7 +1,7 @@
 import {Directive, effect, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatSelect, MatSelectChange} from "@angular/material/select";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'mat-select[form]',
@@ -18,6 +18,7 @@ export class MatSelectDirective<T> extends AbstractFormDirective<T | T[]> {
             const form = this.form();
 
             element.writeValue(form());
+            element.setDisabledState(form.disabled());
         });
     }
 

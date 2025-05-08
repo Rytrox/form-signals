@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[type=number][form]',
@@ -20,6 +20,7 @@ export class InputNumberDirective extends AbstractFormDirective<number> {
             const form = this.form();
 
             element.nativeElement.valueAsNumber = form();
+            element.nativeElement.disabled = form.disabled();
         });
     }
 

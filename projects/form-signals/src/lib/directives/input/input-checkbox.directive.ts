@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[type=checkbox][form]',
@@ -19,6 +19,7 @@ export class InputCheckboxDirective extends AbstractFormDirective<boolean> {
             const form = this.form();
 
             this.element.nativeElement.checked = form();
+            this.element.nativeElement.disabled = form.disabled();
         });
     }
 

@@ -1,6 +1,6 @@
 import {booleanAttribute, Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[multiple][type=file][form], input[type="file"][form]',
@@ -31,6 +31,8 @@ export class InputFileDirective extends AbstractFormDirective<File | File[] | nu
             } else {
                 element.nativeElement.files = null;
             }
+
+            element.nativeElement.disabled = form.disabled();
         });
     }
 

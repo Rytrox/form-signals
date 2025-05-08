@@ -1,7 +1,7 @@
 import {Directive, effect, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatRadioChange, MatRadioGroup} from "@angular/material/radio";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'mat-radio-group[form]',
@@ -18,6 +18,7 @@ export class MatRadioGroupDirective<T> extends AbstractFormDirective<T> {
             const form = this.form();
 
             element.writeValue(form());
+            element.setDisabledState(form.disabled());
         });
     }
 

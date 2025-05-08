@@ -1,13 +1,27 @@
 import {createAbstractForm, Form} from "./form";
 import {ValidationErrors, ValidatorFn} from "./validator";
-import {computed, signal} from "@angular/core";
+import {computed, isSignal, signal, WritableSignal} from "@angular/core";
 
 interface FormControlOptions<T> {
     value: T;
+    disabled?: boolean;
     validators?: ValidatorFn<T>[];
 }
 
-export type FormControl<T> = Form<T, ValidationErrors>;
+export interface FormControl<T> extends Form<T, ValidationErrors> {
+
+    /**
+     * Signal that declares if the control is disabled or not
+     */
+    readonly disabled: WritableSignal<boolean>;
+
+}
+
+export const isFormControl = <T> (val: unknown): val is FormControl<T> => {
+    return isSignal(val) &&
+        'errors' in val && isSignal(val.errors) &&
+        'validators' in val && isSignal(val.validators);
+};
 
 const isSimpleFormOptions = <T> (val: T | FormControlOptions<T>): val is FormControlOptions<T> => {
     return !!val && typeof val === 'object' &&
@@ -22,6 +36,7 @@ export function formControl<T>(val: T | FormControlOptions<T>): FormControl<T> {
     } else {
         return createSimpleForm({
             value: val,
+            disabled: false,
             validators: [],
         })
     }
@@ -46,6 +61,10 @@ const createSimpleForm = <T> (options: FormControlOptions<T>): FormControl<T> =>
                 errors.reduce((error, current) => Object.assign(error, current), {}) :
                 null;
         })
+    });
+
+    Object.defineProperty(form, 'disabled', {
+        value: signal(!!options.disabled)
     });
 
     return form;

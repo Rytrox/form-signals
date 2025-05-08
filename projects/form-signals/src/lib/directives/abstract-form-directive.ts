@@ -1,4 +1,4 @@
-import {FormControl} from "../form-control";
+import {FormControl} from "../models/form-control";
 
 export class AbstractFormDirective<T> {
 

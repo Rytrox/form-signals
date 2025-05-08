@@ -1,5 +1,5 @@
 import {Directive, effect, forwardRef, HostListener, input} from "@angular/core";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 import {MatSliderThumb} from "@angular/material/slider";
 
 @Directive({
@@ -23,6 +23,7 @@ export class MatSliderThumbDirective extends MatSliderThumb {
             const form = this.form();
 
             this.writeValue(form());
+            this.setDisabledState(form.disabled());
         });
     }
 

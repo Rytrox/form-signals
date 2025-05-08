@@ -1,7 +1,7 @@
 import {Directive, effect, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatButtonToggleChange, MatButtonToggleGroup} from "@angular/material/button-toggle";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'mat-button-toggle-group[form]',
@@ -18,6 +18,7 @@ export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T> {
             const form = this.form();
 
             element.writeValue(form());
+            element.setDisabledState(form.disabled());
         });
     }
 

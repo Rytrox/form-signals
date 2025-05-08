@@ -1,4 +1,4 @@
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -73,6 +73,20 @@ describe('MatDatepickerDirective', () => {
 
         cy.wait(1).then(() => {
             cy.get('input').should('have.value', form()!.toLocaleDateString('en-US'));
+        });
+    });
+
+    it('should disable when form is disabled', () => {
+        cy.get('input').should('be.enabled');
+
+        form.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('input').should('be.disabled');
+
+            form.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.enabled');
+            });
         });
     });
 });

@@ -1,4 +1,4 @@
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('InputTextDirective', () => {
@@ -41,6 +41,20 @@ describe('InputTextDirective', () => {
 
         cy.wait(1).then(() => {
             cy.wrap(form()).should('eq', 'Changed!');
+        });
+    });
+
+    it('should disable when form is disabled', () => {
+        cy.get('input').should('be.enabled');
+
+        form.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('input').should('be.disabled');
+
+            form.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('input').should('be.enabled');
+            });
         });
     });
 })

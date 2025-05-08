@@ -2,11 +2,11 @@
  * Public API Surface of form-signals
  */
 
-export type {ValidationErrors, ValidatorFn} from './lib/validator';
-export type {Form} from './lib/form';
+export type {ValidationErrors, ValidatorFn} from './lib/models/validator';
+export type {Form} from './lib/models/form';
 
-export * from './lib/form-array';
-export * from './lib/form-group';
-export * from './lib/form-control';
+export * from './lib/models/form-array';
+export * from './lib/models/form-group';
+export * from './lib/models/form-control';
 
 export * from './lib/forms.module';

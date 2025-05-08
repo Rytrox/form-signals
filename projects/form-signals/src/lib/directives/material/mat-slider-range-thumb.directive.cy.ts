@@ -1,6 +1,6 @@
 import {mount} from "cypress/angular";
 import {MatSliderModule} from "@angular/material/slider";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 import {FormsModule} from "../../forms.module";
 
 describe('MatSliderRangeThumbDirective', () => {
@@ -52,4 +52,33 @@ describe('MatSliderRangeThumbDirective', () => {
             cy.wrap(endForm()).should('eq', 60);
         });
     });
+
+    it('should disable both thumbs when start form is disabled', () => {
+        cy.get('input').each(input => cy.wrap(input).should('be.enabled'));
+
+        startForm.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('input').each(input => cy.wrap(input).should('be.disabled'));
+
+            startForm.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('input').each(input => cy.wrap(input).should('be.enabled'));
+            });
+        });
+    });
+
+    it('should disable both thumbs when end form is disabled', () => {
+        cy.get('input').each(input => cy.wrap(input).should('be.enabled'));
+
+        endForm.disabled.set(true);
+        cy.wait(1).then(() => {
+            cy.get('input').each(input => cy.wrap(input).should('be.disabled'));
+
+            endForm.disabled.set(false);
+            cy.wait(1).then(() => {
+                cy.get('input').each(input => cy.wrap(input).should('be.enabled'));
+            });
+        });
+    });
+
 });

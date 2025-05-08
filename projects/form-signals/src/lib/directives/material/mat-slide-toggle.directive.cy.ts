@@ -1,6 +1,6 @@
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {FormsModule} from "../../forms.module";
-import {formControl} from "../../form-control";
+import {formControl} from "../../models/form-control";
 
 describe('MatSlideToggleDirective', () => {
 
@@ -29,5 +29,27 @@ describe('MatSlideToggleDirective', () => {
         cy.wait(1).then(() => {
             cy.wrap(form()).should('be.false');
         });
+    });
+
+    it('should disable when form is disabled', () => {
+        cy.get('mat-slide-toggle')
+            .find('.mdc-switch')
+            .should('be.enabled')
+            .then(() => {
+                form.disabled.set(true);
+
+                cy.wait(1).then(() => {
+                    cy.get('mat-slide-toggle')
+                        .find('.mdc-switch')
+                        .should('be.disabled')
+                        .then(() => form.disabled.set(false));
+
+                    cy.wait(1).then(() => {
+                        cy.get('mat-slide-toggle')
+                            .find('.mdc-switch')
+                            .should('be.enabled');
+                    });
+                });
+            });
     });
 });

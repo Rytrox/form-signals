@@ -1,5 +1,6 @@
 import {formArrayFactory} from "./form-array";
 import {formControl} from "./form-control";
+import {TestBed} from "@angular/core/testing";
 
 const StringArray = formArrayFactory((val: string) => formControl(val));
 
@@ -26,7 +27,7 @@ describe('FormArray', () => {
         expect(secondControl!()).toBe('World');
     });
 
-    it('should add and remove controls', () => {
+    it('should add and remove controls when group is enabled', () => {
         const array = StringArray(['Hello', 'World']);
         expect(array).toBeTruthy();
         expect(array.length).toBe(2);
@@ -64,5 +65,19 @@ describe('FormArray', () => {
         expect(array[3]).toBeUndefined();
         expect(array[4]).toBeUndefined();
         expect(array[5]).toBeUndefined();
+    });
+
+    it('should disable all controls', async () => {
+        TestBed.runInInjectionContext(() => {
+            const group = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
+            for (const control of group) {
+                expect(control.disabled()).toBe(false);
+            }
+
+            group.disable();
+            for (const control of group) {
+                expect(control.disabled()).toBe(true);
+            }
+        });
     });
 });

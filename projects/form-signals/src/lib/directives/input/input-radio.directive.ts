@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[type=radio][form]',
@@ -18,6 +18,7 @@ export class InputRadioDirective extends AbstractFormDirective<string> {
             const form = this.form();
 
             this.element.nativeElement.checked = form() === this.element.nativeElement.value;
+            this.element.nativeElement.disabled = form.disabled();
         });
     }
 

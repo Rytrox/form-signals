@@ -155,7 +155,7 @@ describe('FormGroup', () => {
         });
     });
 
-    it('should set optional controls', async () => {
+    it('should set optional controls when group is enabled', async () => {
         TestBed.runInInjectionContext(() => {
             const group = FooGroup();
             group.bar?.set({
@@ -177,4 +177,19 @@ describe('FormGroup', () => {
         });
     });
 
+    it('should disable all controls', async () => {
+        TestBed.runInInjectionContext(() => {
+            const group = FooGroup();
+            expect(group.date.disabled()).toBe(false);
+            expect(group.id.disabled()).toBe(false);
+            expect(group.name.disabled()).toBe(false);
+            expect(group.bar!.bar.disabled()).toBe(false);
+
+            group.disable();
+            expect(group.date.disabled()).toBe(true);
+            expect(group.id.disabled()).toBe(true);
+            expect(group.name.disabled()).toBe(true);
+            expect(group.bar!.bar.disabled()).toBe(true);
+        });
+    });
 });

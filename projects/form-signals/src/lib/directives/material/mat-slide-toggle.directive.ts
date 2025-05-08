@@ -1,7 +1,7 @@
 import {Directive, effect, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'mat-slide-toggle[form]',
@@ -18,6 +18,7 @@ export class MatSlideToggleDirective extends AbstractFormDirective<boolean> {
             const form = this.form();
 
             element.writeValue(form());
+            element.setDisabledState(form.disabled());
         });
     }
 

@@ -1,6 +1,8 @@
 import {createAbstractForm, Form} from "./form";
 import {ValidationErrors, ValidatorFn} from "./validator";
 import {computed} from "@angular/core";
+import {isFormControl} from "./form-control";
+import {isFunction} from "lodash";
 
 export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue<F>, FormArrayErrors<FormError<F>>>, Iterable<F> {
 
@@ -25,6 +27,16 @@ export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue
      * Removes the last control of this FormArray and returns it.
      */
     pop(): F | undefined;
+
+    /**
+     * Disables all included Forms of this FormArray
+     */
+    disable(): void;
+
+    /**
+     * Enables all included Forms of this FormArray
+     */
+    enable(): void;
 
 }
 
@@ -58,10 +70,6 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                 })
             )
         );
-
-        Object.defineProperty(form, 'at', {
-            value: (index: number) => controls.at(index)
-        });
 
         Object.defineProperty(form, 'push', {
             value: (value: FormValue<F>) => {
@@ -134,6 +142,30 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                 Object.defineProperties(form, properties);
             }
         });
+
+        Object.defineProperty(form, 'disable', {
+            value: () => {
+                controls.forEach(control => {
+                    if (isFormControl(control)) {
+                        control.disabled.set(false);
+                    } else if ('disable' in control && isFunction(control.disable)) {
+                        control.disable();
+                    }
+                });
+            }
+        });
+
+        Object.defineProperty(form, 'enable', {
+            value: () => {
+                controls.forEach(control => {
+                    if (isFormControl(control)) {
+                        control.disabled.set(true);
+                    } else if ('enable' in control && isFunction(control.enable)) {
+                        control.enable();
+                    }
+                })
+            }
+        })
 
         return form;
     }

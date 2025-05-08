@@ -1,6 +1,6 @@
 import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
-import {FormControl} from "../../form-control";
+import {FormControl} from "../../models/form-control";
 
 @Directive({
     selector: 'input[type=date][form], input[type=datetime-local][form], input[type=time][form]',
@@ -19,6 +19,7 @@ export class InputDateDirective extends AbstractFormDirective<Date | null> {
             const form = this.form();
 
             element.nativeElement.valueAsDate = form();
+            element.nativeElement.disabled = form.disabled();
         });
     }
 
