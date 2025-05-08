@@ -20,7 +20,8 @@ export interface FormControl<T> extends Form<T, ValidationErrors> {
 export const isFormControl = <T> (val: unknown): val is FormControl<T> => {
     return isSignal(val) &&
         'errors' in val && isSignal(val.errors) &&
-        'validators' in val && isSignal(val.validators);
+        'validators' in val && isSignal(val.validators) &&
+        'disabled' in val && isSignal(val.disabled);
 };
 
 const isSimpleFormOptions = <T> (val: T | FormControlOptions<T>): val is FormControlOptions<T> => {

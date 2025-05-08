@@ -69,13 +69,13 @@ describe('FormArray', () => {
 
     it('should disable all controls', async () => {
         TestBed.runInInjectionContext(() => {
-            const group = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
-            for (const control of group) {
+            const array = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
+            for (const control of array) {
                 expect(control.disabled()).toBe(false);
             }
 
-            group.disable();
-            for (const control of group) {
+            array.disable();
+            for (const control of array) {
                 expect(control.disabled()).toBe(true);
             }
         });

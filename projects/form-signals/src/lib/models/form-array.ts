@@ -147,7 +147,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
             value: () => {
                 controls.forEach(control => {
                     if (isFormControl(control)) {
-                        control.disabled.set(false);
+                        control.disabled.set(true);
                     } else if ('disable' in control && isFunction(control.disable)) {
                         control.disable();
                     }
@@ -159,7 +159,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
             value: () => {
                 controls.forEach(control => {
                     if (isFormControl(control)) {
-                        control.disabled.set(true);
+                        control.disabled.set(false);
                     } else if ('enable' in control && isFunction(control.enable)) {
                         control.enable();
                     }
