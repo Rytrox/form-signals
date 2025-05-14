@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class InputRangeDirective extends AbstractFormDirective<number> {
 
-    public readonly form = input.required<FormControl<number>>();
+    public readonly form = input<FormControl<number>>();
 
     public constructor(private readonly element: ElementRef<HTMLInputElement>) {
         super();
@@ -16,16 +16,19 @@ export class InputRangeDirective extends AbstractFormDirective<number> {
         effect(() => {
             const form = this.form();
 
-            this.element.nativeElement.valueAsNumber = form();
-            this.element.nativeElement.disabled = form.disabled();
+            if (form) {
+                this.element.nativeElement.valueAsNumber = form();
+                this.element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
     @HostListener('input')
     public onInput() {
         const form = this.form();
-
-        this.updateValue(form, this.element.nativeElement.valueAsNumber);
+        if (form) {
+            this.updateValue(form, this.element.nativeElement.valueAsNumber);
+        }
     }
 
 }

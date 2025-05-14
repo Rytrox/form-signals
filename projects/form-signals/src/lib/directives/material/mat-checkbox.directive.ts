@@ -9,7 +9,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
 
-    public readonly form = input.required<FormControl<boolean>>();
+    public readonly form = input<FormControl<boolean>>();
 
     public constructor(
         @Self() private readonly element: MatCheckbox,
@@ -20,8 +20,10 @@ export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
         effect(() => {
             const form = this.form();
 
-            element.writeValue(form());
-            element.setDisabledState(form.disabled());
+            if (form) {
+                element.writeValue(form());
+                element.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -29,6 +31,8 @@ export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
     public onValueChange() {
         const form = this.form();
 
-        this.updateValue(form, this.element.checked);
+        if (form) {
+            this.updateValue(form, this.element.checked);
+        }
     }
 }

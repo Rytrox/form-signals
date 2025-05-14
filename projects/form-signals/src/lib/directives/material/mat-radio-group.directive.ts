@@ -9,16 +9,18 @@ import {FormControl} from "../../models/form-control";
 })
 export class MatRadioGroupDirective<T> extends AbstractFormDirective<T> {
 
-    public readonly form = input.required<FormControl<T>>();
+    public readonly form = input<FormControl<T>>();
 
-    public constructor(element: MatRadioGroup) {
+    public constructor(readonly element: MatRadioGroup) {
         super();
 
         effect(() => {
             const form = this.form();
 
-            element.writeValue(form());
-            element.setDisabledState(form.disabled());
+            if (form) {
+                element.writeValue(form());
+                element.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -26,6 +28,8 @@ export class MatRadioGroupDirective<T> extends AbstractFormDirective<T> {
     public onValueChange(event: MatRadioChange): void {
         const form = this.form();
 
-        this.updateValue(form, event.value);
+        if (form) {
+            this.updateValue(form, event.value);
+        }
     }
 }

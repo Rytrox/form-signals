@@ -10,7 +10,7 @@ import {Subscription} from "rxjs";
 })
 export class MatDatepickerDirective<D> extends AbstractFormDirective<D | null> implements OnDestroy {
 
-    public readonly form = input.required<FormControl<D | null>>();
+    public readonly form = input<FormControl<D | null>>();
 
     private readonly subscription = new Subscription();
 
@@ -20,15 +20,19 @@ export class MatDatepickerDirective<D> extends AbstractFormDirective<D | null> i
         effect(() => {
             const form = this.form();
 
-            datePicker.writeValue(form());
-            datePicker.setDisabledState(form.disabled());
+            if (form) {
+                datePicker.writeValue(form());
+                datePicker.setDisabledState(form.disabled());
+            }
         });
 
         this.subscription.add(
             datePicker.dateChange.subscribe(date => {
                 const form = this.form();
 
-                this.updateValue(form, date.value);
+                if (form) {
+                    this.updateValue(form, date.value);
+                }
             })
         );
     }

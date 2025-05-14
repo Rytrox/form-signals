@@ -43,6 +43,15 @@ Test Cypress:
     - npx cypress install
   script:
     - npm run cypress:run-component
+  after_script:
+    - npm run cypress:print-coverage
+    - npm run cypress:cobertura
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
 
 Build:
   image: trion/ng-cli:19.2.9

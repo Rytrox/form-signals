@@ -30,7 +30,7 @@ yarn add @rytrox/form-signals
 
 | Angular Version | Library Version |
 |:---------------:|:---------------:|
-|     ^19.2.0     |     ^1.0.0      |
+|     ^19.2.0     |     ^0.2.1      |
 
 
 ## Usage

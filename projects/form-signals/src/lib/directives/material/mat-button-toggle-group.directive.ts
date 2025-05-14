@@ -7,9 +7,9 @@ import {FormControl} from "../../models/form-control";
     selector: 'mat-button-toggle-group[form]',
     standalone: false
 })
-export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T> {
+export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T | T[]> {
 
-    public readonly form = input.required<FormControl<T> | FormControl<T[]>>();
+    public readonly form = input<FormControl<T> | FormControl<T[]>>();
 
     public constructor(readonly element: MatButtonToggleGroup) {
         super();
@@ -17,8 +17,10 @@ export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T> {
         effect(() => {
             const form = this.form();
 
-            element.writeValue(form());
-            element.setDisabledState(form.disabled());
+            if (form) {
+                element.writeValue(form());
+                element.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -26,7 +28,9 @@ export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T> {
     public onChange(event: MatButtonToggleChange): void {
         const form = this.form();
 
-        form.set(event.value);
+        if (form) {
+            form.set(event.value);
+        }
     }
 
 }

@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class InputRadioDirective extends AbstractFormDirective<string> {
 
-    public readonly form = input.required<FormControl<string>>();
+    public readonly form = input<FormControl<string>>();
 
 
     constructor(private element: ElementRef<HTMLInputElement>) {
@@ -17,17 +17,22 @@ export class InputRadioDirective extends AbstractFormDirective<string> {
         effect(() => {
             const form = this.form();
 
-            this.element.nativeElement.checked = form() === this.element.nativeElement.value;
-            this.element.nativeElement.disabled = form.disabled();
+            if (form) {
+                this.element.nativeElement.checked = form() === this.element.nativeElement.value;
+                this.element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
     @HostListener('change')
     public onClick(): void {
-        const checked = this.element.nativeElement.checked;
+        const form = this.form();
+        if (form) {
+            const checked = this.element.nativeElement.checked;
 
-        if (checked) {
-            this.updateValue(this.form(), this.element.nativeElement.value);
+            if (checked) {
+                this.updateValue(form, this.element.nativeElement.value);
+            }
         }
     }
 

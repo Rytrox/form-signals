@@ -14,7 +14,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class MatSliderRangeThumbDirective extends MatSliderRangeThumb {
 
-    public readonly form = input.required<FormControl<number>>();
+    public readonly form = input<FormControl<number>>();
 
     public constructor() {
         super();
@@ -22,8 +22,10 @@ export class MatSliderRangeThumbDirective extends MatSliderRangeThumb {
         effect(() => {
             const form = this.form();
 
-            this.writeValue(form());
-            this.setDisabledState(form.disabled());
+            if (form) {
+                this.writeValue(form());
+                this.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -31,6 +33,8 @@ export class MatSliderRangeThumbDirective extends MatSliderRangeThumb {
     public onInput() {
         const form = this.form();
 
-        form.set(this.value);
+        if (form) {
+            form.set(this.value);
+        }
     }
 }

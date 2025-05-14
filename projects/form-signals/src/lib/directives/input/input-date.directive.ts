@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class InputDateDirective extends AbstractFormDirective<Date | null> {
 
-    public readonly form = input.required<FormControl<Date | null>>();
+    public readonly form = input<FormControl<Date | null>>();
 
     public constructor(
         private readonly element: ElementRef<HTMLInputElement>
@@ -18,8 +18,10 @@ export class InputDateDirective extends AbstractFormDirective<Date | null> {
         effect(() => {
             const form = this.form();
 
-            element.nativeElement.valueAsDate = form();
-            element.nativeElement.disabled = form.disabled();
+            if (form) {
+                element.nativeElement.valueAsDate = form();
+                element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
@@ -27,7 +29,9 @@ export class InputDateDirective extends AbstractFormDirective<Date | null> {
     protected onInput(): void {
         const form = this.form();
 
-        super.updateValue(form, this.element.nativeElement.valueAsDate);
+        if (form) {
+            super.updateValue(form, this.element.nativeElement.valueAsDate);
+        }
     }
 
 }

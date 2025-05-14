@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class InputCheckboxDirective extends AbstractFormDirective<boolean> {
 
-    public readonly form = input.required<FormControl<boolean>>();
+    public readonly form = input<FormControl<boolean>>();
 
     public constructor(
         private readonly element: ElementRef<HTMLInputElement>
@@ -18,8 +18,10 @@ export class InputCheckboxDirective extends AbstractFormDirective<boolean> {
         effect(() => {
             const form = this.form();
 
-            this.element.nativeElement.checked = form();
-            this.element.nativeElement.disabled = form.disabled();
+            if (form) {
+                this.element.nativeElement.checked = form();
+                this.element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
@@ -27,6 +29,8 @@ export class InputCheckboxDirective extends AbstractFormDirective<boolean> {
     public onChange() {
         const form = this.form();
 
-        this.updateValue(form, this.element.nativeElement.checked);
+        if (form) {
+            this.updateValue(form, this.element.nativeElement.checked);
+        }
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "@rytrox/form-signals",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -13,7 +13,9 @@
         "e2e": "ng e2e",
         "cypress:open": "cypress open",
         "cypress:run": "cypress run",
-        "cypress:run-component": "cypress run --component"
+        "cypress:run-component": "cypress run --component",
+        "cypress:print-coverage": "nyc report --reporter=text",
+        "cypress:cobertura": "nyc report --reporter=cobertura"
     },
     "private": false,
     "license": "MIT",
@@ -38,10 +40,16 @@
         "@angular-devkit/build-angular": "^19.2.11",
         "@angular/cli": "^19.2.11",
         "@angular/compiler-cli": "^19.2.10",
+        "@babel/core": "^7.27.1",
+        "@babel/preset-env": "^7.27.2",
+        "@cypress/code-coverage": "^3.14.2",
         "@cypress/schematic": "^3.0.0",
         "@types/jasmine": "^5.1.8",
         "@types/lodash": "^4.17.16",
         "angular-eslint": "^19.3.0",
+        "babel-loader": "^9.2.1",
+        "babel-plugin-istanbul": "^7.0.0",
+        "cypress": "latest",
         "eslint": "^9.26.0",
         "jasmine-core": "^5.7.1",
         "karma": "^6.4.4",
@@ -51,8 +59,7 @@
         "karma-jasmine-html-reporter": "^2.1.0",
         "ng-packagr": "^19.2.2",
         "typescript": "^5.8.3",
-        "typescript-eslint": "^8.32.0",
-        "cypress": "latest"
+        "typescript-eslint": "^8.32.0"
     },
     "keywords": [
         "angular",

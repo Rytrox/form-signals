@@ -14,7 +14,7 @@ import {MatSliderThumb} from "@angular/material/slider";
 })
 export class MatSliderThumbDirective extends MatSliderThumb {
 
-    public readonly form = input.required<FormControl<number>>();
+    public readonly form = input<FormControl<number>>();
 
     public constructor() {
         super();
@@ -22,8 +22,10 @@ export class MatSliderThumbDirective extends MatSliderThumb {
         effect(() => {
             const form = this.form();
 
-            this.writeValue(form());
-            this.setDisabledState(form.disabled());
+            if (form) {
+                this.writeValue(form());
+                this.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -31,7 +33,9 @@ export class MatSliderThumbDirective extends MatSliderThumb {
     public onInput() {
         const form = this.form();
 
-        form.set(this.value);
+        if (form) {
+            form.set(this.value);
+        }
     }
 
 }

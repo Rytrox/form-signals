@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class SelectDirective extends AbstractFormDirective<string> {
 
-    public readonly form = input.required<FormControl<string>>();
+    public readonly form = input<FormControl<string>>();
 
     public constructor(private readonly element: ElementRef<HTMLSelectElement>) {
         super();
@@ -16,8 +16,10 @@ export class SelectDirective extends AbstractFormDirective<string> {
         effect(() => {
             const form = this.form();
 
-            element.nativeElement.value = form();
-            element.nativeElement.disabled = form.disabled();
+            if (form) {
+                element.nativeElement.value = form();
+                element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
@@ -25,6 +27,8 @@ export class SelectDirective extends AbstractFormDirective<string> {
     public onChange(): void {
         const form = this.form();
 
-        this.updateValue(form, this.element.nativeElement.value);
+        if (form) {
+            this.updateValue(form, this.element.nativeElement.value);
+        }
     }
 }

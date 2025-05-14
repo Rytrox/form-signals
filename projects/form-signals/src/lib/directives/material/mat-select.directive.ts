@@ -7,9 +7,9 @@ import {FormControl} from "../../models/form-control";
     selector: 'mat-select[form]',
     standalone: false
 })
-export class MatSelectDirective<T> extends AbstractFormDirective<T | T[]> {
+export class MatSelectDirective<T> extends AbstractFormDirective<T | null | T[]> {
 
-    public readonly form = input.required<FormControl<T> | FormControl<T | null> | FormControl<T[]>>();
+    public readonly form = input<FormControl<T> | FormControl<T | null> | FormControl<T[]>>();
 
     constructor(private readonly element: MatSelect) {
         super();
@@ -17,8 +17,10 @@ export class MatSelectDirective<T> extends AbstractFormDirective<T | T[]> {
         effect(() => {
             const form = this.form();
 
-            element.writeValue(form());
-            element.setDisabledState(form.disabled());
+            if (form) {
+                element.writeValue(form());
+                element.setDisabledState(form.disabled());
+            }
         });
     }
 
@@ -26,16 +28,18 @@ export class MatSelectDirective<T> extends AbstractFormDirective<T | T[]> {
     public onChange(event: MatSelectChange<T | T[]>) {
         const form = this.form();
 
-        if (this.isArrayForm(form)) {
-            const arr = Array.isArray(event.value) ? event.value : [ event.value ];
+        if (form) {
+            if (this.isArrayForm(form)) {
+                const arr = Array.isArray(event.value) ? event.value : [event.value];
 
-            form.set(arr);
-        } else {
-            form.set(event.value as T);
+                form.set(arr);
+            } else {
+                form.set(event.value as T);
+            }
         }
     }
 
-    private isArrayForm(form: FormControl<T> | FormControl<T | null> | FormControl<T[]>): form is FormControl<T[]> {
+    private isArrayForm(_form: FormControl<T> | FormControl<T | null> | FormControl<T[]>): _form is FormControl<T[]> {
         return this.element.multiple;
     }
 }

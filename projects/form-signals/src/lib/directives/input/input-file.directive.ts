@@ -9,7 +9,7 @@ import {FormControl} from "../../models/form-control";
 export class InputFileDirective extends AbstractFormDirective<File | File[] | null> {
 
     public readonly multiple = input(false, {transform: booleanAttribute});
-    public readonly form = input.required<FormControl<File | null> | FormControl<File[] | null>>();
+    public readonly form = input<FormControl<File | null> | FormControl<File[] | null>>();
 
     public constructor(private element: ElementRef<HTMLInputElement>) {
         super();
@@ -17,22 +17,24 @@ export class InputFileDirective extends AbstractFormDirective<File | File[] | nu
         effect(() => {
             const form = this.form();
 
-            const val = form();
-            if (val) {
-                const list = new DataTransfer();
+            if (form) {
+                const val = form();
+                if (val) {
+                    const list = new DataTransfer();
 
-                if (Array.isArray(val)) {
-                    val.forEach(item => list.items.add(item));
+                    if (Array.isArray(val)) {
+                        val.forEach(item => list.items.add(item));
+                    } else {
+                        list.items.add(val);
+                    }
+
+                    element.nativeElement.files = list.files;
                 } else {
-                    list.items.add(val);
+                    element.nativeElement.files = null;
                 }
 
-                element.nativeElement.files = list.files;
-            } else {
-                element.nativeElement.files = null;
+                element.nativeElement.disabled = form.disabled();
             }
-
-            element.nativeElement.disabled = form.disabled();
         });
     }
 
@@ -40,28 +42,30 @@ export class InputFileDirective extends AbstractFormDirective<File | File[] | nu
     public onFileChange(): void {
         const form = this.form();
 
-        if (this.element.nativeElement.files) {
-            const file = this.element.nativeElement.files;
+        if (form) {
+            if (this.element.nativeElement.files) {
+                const file = this.element.nativeElement.files;
 
-            if (this.isFileArrayForm(form)) {
-                const arr = [];
-                for (let i = 0; i < file.length; i++) {
-                    const item = file.item(i);
-                    if (item) {
-                        arr.push(item);
+                if (this.isFileArrayForm(form)) {
+                    const arr = [];
+                    for (let i = 0; i < file.length; i++) {
+                        const item = file.item(i);
+                        if (item) {
+                            arr.push(item);
+                        }
                     }
-                }
 
-                form.set(arr);
+                    form.set(arr);
+                } else {
+                    form.set(file.item(0));
+                }
             } else {
-                form.set(file.item(0));
+                form.set(null);
             }
-        } else {
-            form.set(null);
         }
     }
 
-    private isFileArrayForm(val: FormControl<File | null> | FormControl<File[] | null>): val is FormControl<File[] | null> {
+    private isFileArrayForm(_val: FormControl<File | null> | FormControl<File[] | null>): _val is FormControl<File[] | null> {
         return this.multiple();
     }
 }

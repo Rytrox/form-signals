@@ -8,7 +8,7 @@ import {FormControl} from "../../models/form-control";
 })
 export class InputTextDirective extends AbstractFormDirective<string> {
 
-    public readonly form = input.required<FormControl<string>>();
+    public readonly form = input<FormControl<string>>();
 
     public constructor(
         private readonly element: ElementRef<HTMLInputElement | HTMLTextAreaElement>
@@ -19,8 +19,10 @@ export class InputTextDirective extends AbstractFormDirective<string> {
         effect(() => {
             const form = this.form();
 
-            element.nativeElement.value = form();
-            element.nativeElement.disabled = form.disabled();
+            if (form) {
+                element.nativeElement.value = form();
+                element.nativeElement.disabled = form.disabled();
+            }
         });
     }
 
@@ -28,6 +30,8 @@ export class InputTextDirective extends AbstractFormDirective<string> {
     public onInput(): void {
         const form = this.form();
 
-        this.updateValue(form, this.element.nativeElement.value);
+        if (form) {
+            this.updateValue(form, this.element.nativeElement.value);
+        }
     }
 }

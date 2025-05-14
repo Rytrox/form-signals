@@ -48,7 +48,7 @@
                     "builder": "@cypress/schematic:cypress",
                     "options": {
                         "devServerTarget": "form-signals:serve",
-                        "configFile": "projects/form-signals/cypress.config.js"
+                        "configFile": "projects/form-signals/cypress.config.ts"
                     },
                     "configurations": {
                         "production": {
@@ -61,7 +61,7 @@
                     "options": {
                         "watch": true,
                         "headless": false,
-                        "configFile": "projects/form-signals/cypress.config.js"
+                        "configFile": "projects/form-signals/cypress.config.ts"
                     }
                 },
                 "ct": {
@@ -203,7 +203,7 @@
                     "builder": "@cypress/schematic:cypress",
                     "options": {
                         "devServerTarget": "form-signals-test-project:serve",
-                        "configFile": "projects/form-signals-test-project/cypress.config.js"
+                        "configFile": "projects/form-signals-test-project/cypress.config.ts"
                     },
                     "configurations": {
                         "production": {
@@ -216,7 +216,7 @@
                     "options": {
                         "watch": true,
                         "headless": false,
-                        "configFile": "projects/form-signals-test-project/cypress.config.js"
+                        "configFile": "projects/form-signals-test-project/cypress.config.ts"
                     }
                 },
                 "ct": {
