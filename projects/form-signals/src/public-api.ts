@@ -3,7 +3,7 @@
  */
 
 export type {ValidationErrors, ValidatorFn} from './lib/models/validator';
-export type {Form} from './lib/models/form';
+export type {Form, FormFactoryType} from './lib/models/form';
 
 export * from './lib/models/form-array';
 export * from './lib/models/form-group';
