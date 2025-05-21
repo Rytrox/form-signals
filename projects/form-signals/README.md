@@ -8,7 +8,6 @@ Focused on simplicity, with full [Angular Material](https://www.npmjs.com/packag
 - [Compatibility List](#compatibility-list)
 - [Usage](#usage)
 - [Differences to Angular](#differences-to-angular)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
@@ -173,7 +172,7 @@ Now, we can create a FormGroup like this:
 })
 export class AppComponent {
 
-    protected readonly form = FooGroup();
+    protected readonly form: FormFactoryType<typeof FooGroup> = FooGroup();
 
     public constructor() {
         effect(() => {
@@ -229,6 +228,7 @@ const FooArray = formArrayFactory((foo: Foo) => FooGroup(foo));
 ```
 
 After that, you can create an Instance by using the builder just like before:
+
 ```ts
 @Component({
     selector: 'app-root',
@@ -238,12 +238,12 @@ After that, you can create an Instance by using the builder just like before:
 })
 export class AppComponent {
 
-    protected readonly form = FooArray([]);
+    protected readonly form: FormFactoryType<typeof FooArray> = FooArray([]);
 
     public constructor() {
         effect(() => {
             const val: Foo[] = form();
-            
+
             // Interact with the value itself...
         });
     }

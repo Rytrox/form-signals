@@ -1,6 +1,20 @@
 import {ValidatorFn} from "./validator";
 import {signal, Signal, WritableSignal} from "@angular/core";
 
+/**
+ * Resolves any factory function inside your Code and returns the Type of the generated Form.
+ */
+export type FormFactoryType<F> = (
+    F extends (val?: any) => infer FG ? FG : never
+);
+
+
+/**
+ * Abstract Interface of a Form.
+ *
+ * Every Form is a Signal, that can hold and set values.
+ * Additionally, there are Signals inside to check states or validators
+ */
 export interface Form<T, E> extends WritableSignal<T> {
 
     /**
