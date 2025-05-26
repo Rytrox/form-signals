@@ -1,5 +1,5 @@
 import {formArrayFactory} from "./form-array";
-import {formControl} from "./form-control";
+import {formControl, isFormControl} from "./form-control";
 import {TestBed} from "@angular/core/testing";
 
 const StringArray = formArrayFactory((val: string) => formControl(val));
@@ -100,4 +100,28 @@ describe('FormArray', () => {
             expect(array()).toEqual(['a', 'b', 'c', 'd', 'e', 'f']);
         });
     });
+
+    it('should map array with control', async () => {
+        TestBed.runInInjectionContext(() => {
+            const array = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
+
+            const values = array.map(control => {
+                expect(isFormControl(control)).toBe(true);
+
+                return control().toLowerCase();
+            });
+
+            expect(values).toEqual(['a', 'b', 'c', 'd', 'e', 'f']);
+        });
+    });
+
+    it('should do forEach with controls', async () => {
+        TestBed.runInInjectionContext(() => {
+            const array = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
+
+            array.forEach(control => {
+                expect(isFormControl(control)).toBe(true);
+            });
+        })
+    })
 });

@@ -38,6 +38,21 @@ export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue
      */
     enable(): void;
 
+    /**
+     * Calls a defined callback function on each element of an array, and returns an array that contains the results.
+     *
+     * @param callbackFn A function that accepts up to three arguments.
+     *                   The map method calls the callbackFn function one time for each element in the array.
+     */
+    map<U>(callbackFn: (control: F, index: number, array: F[]) => U): U[];
+
+    /**
+     * Performs the specified action for each element in an array.
+     * @param callbackFn A function that accepts up to three arguments.
+     *                   forEach calls the callbackFn function one time for each element in the array.
+     */
+    forEach(callbackFn: (control: F, index: number, array: F[]) => void): void;
+
 }
 
 type FormError<F> = F extends Form<any, infer E> ? E : never;
@@ -171,6 +186,18 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                         control.enable();
                     }
                 })
+            }
+        });
+
+        Object.defineProperty(form, 'map', {
+            value: <U> (callbackFn: (control: F, index: number, array: F[]) => U) => {
+                return controls.map(callbackFn);
+            }
+        });
+
+        Object.defineProperty(form, 'forEach', {
+            value: (callbackFn: (control: F, index: number, array: F[]) => void) => {
+                controls.forEach(callbackFn);
             }
         });
 
