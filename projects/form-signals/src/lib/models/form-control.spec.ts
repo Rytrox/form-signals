@@ -49,5 +49,12 @@ describe('FormControl', () => {
 
         form.set('');
         expect(form.errors()).toBeNull();
-    })
+    });
+
+    it('should update value via "update"-Method', async () => {
+        const form = formControl(['A', 'B', 'C', 'D', 'E', 'F']);
+
+        form.update(arr => arr.map(e => e.toLowerCase()));
+        expect(form()).toEqual(['a', 'b', 'c', 'd', 'e', 'f']);
+    });
 });

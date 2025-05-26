@@ -192,4 +192,39 @@ describe('FormGroup', () => {
             expect(group.bar!.bar.disabled()).toBe(true);
         });
     });
+
+    it('should update value via "update"-Method', async () => {
+        TestBed.runInInjectionContext(() => {
+            const group = FooGroup();
+
+            group.set({
+                bar: {
+                    bar: 'Hello World'
+                },
+                date: new Date(),
+                name: 'Hello',
+                id: 1,
+                array: []
+            });
+            group.update(value => {
+                return {
+                    ...value,
+                    date: new Date(0),
+                    bar: {
+                        bar: 'Hello'
+                    }
+                }
+            });
+
+            expect(group()).toEqual({
+                bar: {
+                    bar: 'Hello'
+                },
+                date: new Date(0),
+                name: 'Hello',
+                id: 1,
+                array: []
+            });
+        });
+    });
 });

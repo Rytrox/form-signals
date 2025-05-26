@@ -40,6 +40,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
     return (val?: T) => {
         const controls = fn(val);
 
+        // FIXME: I know this is not as performant as it should... Wait for Linked-Signals
         const form = createAbstractForm<T, F>(() => calcValue<T, F>(controls)) as FormGroup<T, F>;
         // Register Controls
         Object.entries<Form<any, any> | undefined>(controls)
@@ -79,6 +80,12 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
                     .forEach(([key, control]) => {
                         control.set(val[key]);
                     });
+            }
+        });
+
+        Object.defineProperty(form, 'update', {
+            value: (fn: (val: T) => T): void => {
+                form.set(fn(form()))
             }
         });
 

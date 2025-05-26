@@ -48,7 +48,8 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
     return val => {
         let controls = val.map(element => fn(element));
 
-        const form = createAbstractForm(computed(() => calcValue<F>(controls))) as FormArray<F>;
+        // FIXME: I know this is not as performant as it should... Wait for Linked-Signals
+        const form = createAbstractForm(() => calcValue<F>(controls)) as FormArray<F>;
         Object.defineProperty(
             form,
             'length',
@@ -143,6 +144,12 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
             }
         });
 
+        Object.defineProperty(form, 'update', {
+            value: (fn: (val: FormArrayValue<F>) => FormArrayValue<F>) => {
+                form.set(fn(form()));
+            }
+        });
+
         Object.defineProperty(form, 'disable', {
             value: () => {
                 controls.forEach(control => {
@@ -165,7 +172,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                     }
                 })
             }
-        })
+        });
 
         return form;
     }

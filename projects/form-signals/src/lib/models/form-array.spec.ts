@@ -27,6 +27,17 @@ describe('FormArray', () => {
         expect(secondControl!()).toBe('World');
     });
 
+    it('should push values and include them as well', () => {
+        const array = StringArray(['Hello', 'World']);
+        expect(array.length).toBe(2);
+
+        array.push('!');
+        expect(array.length).toBe(3);
+
+        array.pop();
+        expect(array.length).toBe(2);
+    });
+
     it('should add and remove controls when group is enabled', () => {
         const array = StringArray(['Hello', 'World']);
         expect(array).toBeTruthy();
@@ -78,6 +89,15 @@ describe('FormArray', () => {
             for (const control of array) {
                 expect(control.disabled()).toBe(true);
             }
+        });
+    });
+
+    it('should update value via "update"-Method', async () => {
+        TestBed.runInInjectionContext(() => {
+            const array = StringArray(['A', 'B', 'C', 'D', 'E', 'F']);
+
+            array.update(arr => arr.map(e => e.toLowerCase()));
+            expect(array()).toEqual(['a', 'b', 'c', 'd', 'e', 'f']);
         });
     });
 });
