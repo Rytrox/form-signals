@@ -11,6 +11,7 @@ import {FormsModule} from '../../../form-signals/src/lib/forms.module';
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {provideNativeDateAdapter} from "@angular/material/core";
+import {formArrayFactory} from "../../../form-signals/src/lib/models/form-array";
 
 interface Developer {
     id: number;
@@ -78,6 +79,8 @@ export const TestGroup = formGroupFactory((val?: Test) => {
     }
 });
 
+const StringFormArray = formArrayFactory((val: string) => formControl(val));
+
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -111,15 +114,29 @@ export class AppComponent {
     protected readonly group = TestGroup();
     protected readonly developers = developers;
 
+    protected readonly array = StringFormArray([]);
+
     title = 'form-signals-test-project';
 
     public constructor() {
         effect(() => {
             console.log('Group: ', this.group());
         });
+
+        effect(() => {
+            const array = this.array;
+
+            for (const control of array) {
+                console.log(control);
+            }
+        });
     }
 
-    protected resetTextElementForm() {
-        this.group.text.set('');
+    protected addElement(): void {
+        this.array.push(`${this.array.length}`);
+    }
+
+    protected removeElement(): void {
+        this.array.pop();
     }
 }

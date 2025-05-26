@@ -90,8 +90,9 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
         Object.defineProperty(form, 'push', {
             value: (value: FormValue<F>) => {
                 const control = fn(value);
+                controls.push(control);
 
-                Object.defineProperty(form, controls.push(control), {
+                Object.defineProperty(form, controls.length - 1, {
                     value: control,
                     configurable: true
                 })

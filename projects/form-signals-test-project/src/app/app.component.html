@@ -13,9 +13,14 @@
     <input matInput [form]="group.text">
     <textarea matInput [form]="group.text"></textarea>
 
-    <button (click)="resetTextElementForm()">
-        Reset
-    </button>
+    <div>
+        @for (control of array; track $index) {
+            <input [form]="control">
+        }
+
+        <button (click)="addElement()">Element hinzufügen</button>
+        <button (click)="removeElement()">Element entfernen</button>
+    </div>
 </div>
 
 <div>
