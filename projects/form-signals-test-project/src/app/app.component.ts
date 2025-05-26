@@ -119,4 +119,7 @@ export class AppComponent {
         });
     }
 
+    protected resetTextElementForm() {
+        this.group.text.set('');
+    }
 }
