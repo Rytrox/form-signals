@@ -62,7 +62,10 @@ type FormArrayValue<F> = F extends Form<infer T, any> ? T[] : never;
 export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<F>) => F): (val: FormArrayValue<F>) => FormArray<F> => {
     return val => {
         const controls = signal(val.map(element => fn(element)));
+
         const form = createAbstractForm(computed(() => calcValue<F>(controls()))) as FormArray<F>;
+        reindexArray(form, controls());
+
         Object.defineProperty(
             form,
             'length',
@@ -73,27 +76,12 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
             }
         )
 
-        Object.defineProperties(
-            form,
-            Object.fromEntries(
-                controls().map((control, index) => {
-                    return [index, {
-                        value: control,
-                        configurable: true
-                    }];
-                })
-            )
-        );
-
         Object.defineProperty(form, 'push', {
             value: (value: FormValue<F>) => {
                 const control = fn(value);
                 controls.update(c => [...c, control]);
 
-                Object.defineProperty(form, controls.length - 1, {
-                    value: control,
-                    configurable: true
-                })
+                reindexArray(form, controls());
             }
         });
 
@@ -208,6 +196,20 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
 
 const calcValue = <F extends Form<any, any>>(controls: F[]): FormArrayValue<F> => {
     return controls.map(control => control()) as FormArrayValue<F>;
+}
+
+const reindexArray = <F extends Form<any, any>>(form: FormArray<F>, controls: F[]): void => {
+    Object.defineProperties(
+        form,
+        Object.fromEntries(
+            controls.map((control, index) => {
+                return [index, {
+                    value: control,
+                    configurable: true
+                }];
+            })
+        )
+    );
 }
 
 const calcGroupErrors = <F>(value: FormArrayValue<F>, validators: ValidatorFn<FormArrayValue<F>>[]): ValidationErrors | null => {

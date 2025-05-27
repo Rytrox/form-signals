@@ -82,9 +82,12 @@ describe('FormArray', () => {
 
         array.push('!');
         expect(array.length).toBe(3);
+        expect(array[2]).toBeTruthy();
+        expect(array[2]!()).toBe('!');
 
         array.pop();
         expect(array.length).toBe(2);
+        expect(array[2]).toBeUndefined();
     });
 
     it('should add and remove controls when group is enabled', () => {

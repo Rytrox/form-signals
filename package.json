@@ -1,6 +1,6 @@
 {
     "name": "@rytrox/form-signals",
-    "version": "0.4.2",
+    "version": "0.4.3",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -40,7 +40,7 @@
         "@angular-devkit/build-angular": "^19.2.13",
         "@angular/cli": "^19.2.13",
         "@angular/compiler-cli": "^19.2.13",
-        "@babel/core": "^7.27.1",
+        "@babel/core": "^7.27.3",
         "@babel/preset-env": "^7.27.2",
         "@cypress/code-coverage": "^3.14.3",
         "@cypress/schematic": "^3.0.0",
