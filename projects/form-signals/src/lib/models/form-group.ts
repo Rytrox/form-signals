@@ -1,5 +1,5 @@
 import {createAbstractForm, Form} from "./form";
-import {computed} from "@angular/core";
+import {computed, signal} from "@angular/core";
 import {ValidationErrors, ValidatorFn} from "./validator";
 import {isFunction} from "lodash";
 import {isFormControl} from "./form-control";
@@ -38,12 +38,11 @@ export type FormGroup<T extends {[K in keyof T]: T[K]}, F extends TForm<T>> = Gr
 
 export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TForm<T>> (fn: (val?: T) => Required<F>): (val?: T) => FormGroup<T, F> => {
     return (val?: T) => {
-        const controls = fn(val);
+        const controls = signal(fn(val));
+        const form = createAbstractForm<T, F>(computed(() => calcValue<T, F>(controls()))) as FormGroup<T, F>;
 
-        // FIXME: I know this is not as performant as it should... Wait for Linked-Signals
-        const form = createAbstractForm<T, F>(() => calcValue<T, F>(controls)) as FormGroup<T, F>;
         // Register Controls
-        Object.entries<Form<any, any> | undefined>(controls)
+        Object.entries<Form<any, any> | undefined>(controls())
             .filter((arr): arr is [keyof T & string, Form<any, any>] => !!arr[1])
             .forEach(([k, v]) => {
                 if (!forbiddenNames.includes(k)) {
@@ -60,7 +59,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
             value: computed(() => {
                 // construct Error object
                 const groupErrors = calcGroupErrors<T>(form(), form.validators());
-                const controlErrors = calcControlErrors<T, F>(controls);
+                const controlErrors = calcControlErrors<T, F>(controls());
 
                 if (groupErrors === null && Object.keys(controlErrors).length === 0) {
                     return null;
@@ -75,7 +74,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
 
         Object.defineProperty(form, 'set', {
             value: (val: T) => {
-                Object.entries<Form<any, any> | undefined>(controls)
+                Object.entries<Form<any, any> | undefined>(controls())
                     .filter((arr): arr is [keyof T & string, Form<any, any>] => !!arr[1])
                     .forEach(([key, control]) => {
                         control.set(val[key]);
@@ -92,11 +91,22 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
         Object.defineProperty(form, 'setControl', {
             value: <K extends OptionalKeys<T>>(key: K, control: F[K] | null) => {
                 if (control) {
-                    controls[key] = control;
+                    controls.update(c => {
+                        const newControls = {...c};
+                        newControls[key] = control;
+
+                        return newControls;
+                    });
 
                     Object.defineProperty(form, key, {value: control, configurable: true});
                 } else {
-                    delete controls[key];
+                    controls.update(c => {
+                        const newControls = {...c};
+                        delete newControls[key];
+
+                        return newControls;
+                    });
+
                     Object.defineProperty(form, key, {value: undefined, configurable: true});
                 }
             }
@@ -104,7 +114,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
 
         Object.defineProperty(form, 'disable', {
             value: () => {
-                Object.values<Form<any, any> | undefined>(controls)
+                Object.values<Form<any, any> | undefined>(controls())
                     .filter((control): control is Form<any, any> => !!control)
                     .forEach(control => {
                         if (isFormControl(control)) {
@@ -118,7 +128,7 @@ export const formGroupFactory = <T extends {[K in keyof T]: T[K]}, F extends TFo
 
         Object.defineProperty(form, 'enable', {
             value: () => {
-                Object.values<Form<any, any> | undefined>(controls)
+                Object.values<Form<any, any> | undefined>(controls())
                     .filter((control): control is Form<any, any> => !!control)
                     .forEach(control => {
                         if (isFormControl(control)) {

@@ -1,6 +1,6 @@
 import {createAbstractForm, Form} from "./form";
 import {ValidationErrors, ValidatorFn} from "./validator";
-import {computed} from "@angular/core";
+import {computed, signal} from "@angular/core";
 import {isFormControl} from "./form-control";
 import {isFunction} from "lodash";
 
@@ -26,7 +26,7 @@ export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue
     /**
      * Removes the last control of this FormArray and returns it.
      */
-    pop(): F | undefined;
+    pop(): void;
 
     /**
      * Disables all included Forms of this FormArray
@@ -61,16 +61,14 @@ type FormArrayValue<F> = F extends Form<infer T, any> ? T[] : never;
 
 export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<F>) => F): (val: FormArrayValue<F>) => FormArray<F> => {
     return val => {
-        let controls = val.map(element => fn(element));
-
-        // FIXME: I know this is not as performant as it should... Wait for Linked-Signals
-        const form = createAbstractForm(() => calcValue<F>(controls)) as FormArray<F>;
+        const controls = signal(val.map(element => fn(element)));
+        const form = createAbstractForm(computed(() => calcValue<F>(controls()))) as FormArray<F>;
         Object.defineProperty(
             form,
             'length',
             {
                 get(): number {
-                    return controls.length;
+                    return controls().length;
                 }
             }
         )
@@ -78,7 +76,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
         Object.defineProperties(
             form,
             Object.fromEntries(
-                controls.map((control, index) => {
+                controls().map((control, index) => {
                     return [index, {
                         value: control,
                         configurable: true
@@ -90,7 +88,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
         Object.defineProperty(form, 'push', {
             value: (value: FormValue<F>) => {
                 const control = fn(value);
-                controls.push(control);
+                controls.update(c => [...c, control]);
 
                 Object.defineProperty(form, controls.length - 1, {
                     value: control,
@@ -101,19 +99,22 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
 
         Object.defineProperty(form, 'pop', {
             value: () => {
-                const control = controls.pop();
-                Object.defineProperty(form, controls.length, {
+                controls.update(c => {
+                    c.pop();
+
+                    return [...c];
+                });
+
+                Object.defineProperty(form, controls().length, {
                     value: undefined,
                     configurable: true
                 });
-
-                return control;
             }
         });
 
         Object.defineProperty(form, Symbol.iterator, {
             get(): any {
-                return controls[Symbol.iterator];
+                return controls()[Symbol.iterator];
             }
         });
 
@@ -121,7 +122,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
             value: computed(() => {
                 // construct Error object
                 const groupErrors = calcGroupErrors<F>(form(), form.validators());
-                const controlErrors = calcControlErrors<F>(controls);
+                const controlErrors = calcControlErrors<F>(controls());
 
                 if (groupErrors === null && Object.keys(controlErrors).length === 0) {
                     return null;
@@ -137,7 +138,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
         Object.defineProperty(form, 'set', {
             value: (array: FormArrayValue<F>) => {
                 const properties = Object.fromEntries(
-                    controls.map((_control, index) => {
+                    controls().map((_control, index) => {
                         return [index, {
                             value: undefined,
                             configurable: true
@@ -145,10 +146,9 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                     })
                 );
 
-                controls = array.map(element => fn(element));
-
+                controls.set(array.map(element => fn(element)));
                 Object.assign(properties, Object.fromEntries(
-                    controls.map((control, index) => {
+                    controls().map((control, index) => {
                         return [index, {
                             value: control,
                             configurable: true
@@ -168,7 +168,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
 
         Object.defineProperty(form, 'disable', {
             value: () => {
-                controls.forEach(control => {
+                controls().forEach(control => {
                     if (isFormControl(control)) {
                         control.disabled.set(true);
                     } else if ('disable' in control && isFunction(control.disable)) {
@@ -180,7 +180,7 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
 
         Object.defineProperty(form, 'enable', {
             value: () => {
-                controls.forEach(control => {
+                controls().forEach(control => {
                     if (isFormControl(control)) {
                         control.disabled.set(false);
                     } else if ('enable' in control && isFunction(control.enable)) {
@@ -192,13 +192,13 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
 
         Object.defineProperty(form, 'map', {
             value: <U> (callbackFn: (control: F, index: number, array: F[]) => U) => {
-                return controls.map(callbackFn);
+                return controls().map(callbackFn);
             }
         });
 
         Object.defineProperty(form, 'forEach', {
             value: (callbackFn: (control: F, index: number, array: F[]) => void) => {
-                controls.forEach(callbackFn);
+                controls().forEach(callbackFn);
             }
         });
 

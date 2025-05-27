@@ -1,8 +1,22 @@
 import {formArrayFactory} from "./form-array";
 import {formControl, isFormControl} from "./form-control";
-import {TestBed} from "@angular/core/testing";
+import {fakeAsync, TestBed, tick} from "@angular/core/testing";
+import {effect} from "@angular/core";
+import {formGroupFactory} from "./form-group";
+
+interface Bar {
+    bar: string;
+}
+
+const BarGroup = formGroupFactory((val?: Bar) => {
+    return {
+        bar: formControl(val?.bar ?? '')
+    }
+})
 
 const StringArray = formArrayFactory((val: string) => formControl(val));
+
+const BarArray = formArrayFactory((val: Bar) => BarGroup(val));
 
 describe('FormArray', () => {
 
@@ -27,6 +41,41 @@ describe('FormArray', () => {
         expect(secondControl!()).toBe('World');
     });
 
+
+    it('should update value when child value is updated', fakeAsync(async () => {
+        TestBed.runInInjectionContext(() => {
+            const array = StringArray(['Test']);
+
+            effect(() => {
+                const val = array();
+
+                expect(val[0]).toBe('Changed');
+            });
+
+            array[0]?.set('Changed');
+            tick(1);
+        });
+    }));
+
+    it('should update value when child of child value is updated', fakeAsync(async () => {
+        TestBed.runInInjectionContext(() => {
+            const array = BarArray([
+                {
+                    bar: 'Test'
+                }
+            ]);
+            effect(() => {
+                const val = array();
+
+                expect(val[0]).toBeTruthy();
+                expect(val[0].bar).toBe('Hello World');
+            });
+
+            array[0]?.bar.set('Hello World');
+            tick(1);
+        });
+    }));
+
     it('should push values and include them as well', () => {
         const array = StringArray(['Hello', 'World']);
         expect(array.length).toBe(2);
@@ -46,8 +95,7 @@ describe('FormArray', () => {
         array.push('!');
         expect(array.length).toBe(3);
 
-        const removed = array.pop();
-        expect(removed!()).toBe('!');
+        array.pop();
         expect(array.length).toBe(2);
     });
 

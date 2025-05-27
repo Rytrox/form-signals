@@ -1,7 +1,8 @@
 import {formGroupFactory} from './form-group';
 import {formControl} from "./form-control";
-import {TestBed} from "@angular/core/testing";
+import {fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {formArrayFactory} from "./form-array";
+import {effect} from "@angular/core";
 
 interface Bar {
     bar: string;
@@ -20,7 +21,7 @@ const BarGroup = formGroupFactory((val?: Bar) => {
     return {
         bar: formControl(val?.bar ?? '')
     }
-})
+});
 
 const BarGroupArray = formArrayFactory(
     (bar: Bar) => BarGroup(bar)
@@ -81,6 +82,35 @@ describe('FormGroup', () => {
             expect(barControl!()).toEqual({bar: 'Hello World'});
         });
     });
+
+    it('should update value when child value is updated', fakeAsync(async () => {
+        TestBed.runInInjectionContext(() => {
+            const group = FooGroup();
+            effect(() => {
+                const val = group();
+
+                expect(val.date).not.toBeNull();
+            });
+
+            group.date.set(new Date());
+            tick(1);
+        });
+    }));
+
+    it('should update value when child of child value is updated', fakeAsync(async () => {
+        TestBed.runInInjectionContext(() => {
+            const group = FooGroup();
+            effect(() => {
+                const val = group();
+
+                expect(val.bar).not.toBeNull();
+                expect(val.bar?.bar).toBe('Hello World');
+            });
+
+            group.bar?.bar.set('Hello World');
+            tick(1);
+        });
+    }));
 
     it('should add group validators', async () => {
         TestBed.runInInjectionContext(() => {
