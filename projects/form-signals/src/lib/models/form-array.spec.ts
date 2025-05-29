@@ -90,7 +90,7 @@ describe('FormArray', () => {
         expect(array[2]).toBeUndefined();
     });
 
-    it('should add and remove controls when group is enabled', () => {
+    it('should push and pop controls', () => {
         const array = StringArray(['Hello', 'World']);
         expect(array).toBeTruthy();
         expect(array.length).toBe(2);
@@ -100,6 +100,20 @@ describe('FormArray', () => {
 
         array.pop();
         expect(array.length).toBe(2);
+    });
+
+    it('should remove controls at index', () => {
+        const array = StringArray(['1', '2', '3', '4', '5']);
+        expect(array).toBeTruthy();
+        expect(array.length).toBe(5);
+
+        array.removeAt(2);
+        expect(array.length).toBe(4);
+        expect(array()).toEqual(['1', '2', '4', '5']);
+        expect(array[2]).toBeTruthy();
+        expect(array[2]!()).toEqual('4');
+        expect(array[3]).toBeTruthy();
+        expect(array[3]!()).toEqual('5');
     });
 
     it('should iterate through form array', () => {

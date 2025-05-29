@@ -24,6 +24,15 @@ export interface FormArray<F extends Form<any, any>> extends Form<FormArrayValue
     push(value: FormValue<F>): void;
 
     /**
+     * Removes the element at a certain index.
+     * All elements after the index is going to be reordered.
+     * If the index does not exist, this method will do nothing
+     *
+     * @param index the index you want to remove
+     */
+    removeAt(index: number): void;
+
+    /**
      * Removes the last control of this FormArray and returns it.
      */
     pop(): void;
@@ -84,6 +93,14 @@ export const formArrayFactory = <F extends Form<any, any>> (fn: (val: FormValue<
                 reindexArray(form, controls());
             }
         });
+
+        Object.defineProperty(form, 'removeAt', {
+            value: (index: number) => {
+                controls.update(controls => controls.filter((_control, i) => i !== index));
+
+                reindexArray(form, controls());
+            }
+        })
 
         Object.defineProperty(form, 'pop', {
             value: () => {
