@@ -1,4 +1,4 @@
-import {Directive, effect, input, OnDestroy} from '@angular/core';
+import { Directive, effect, input, OnDestroy, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatDatepickerInput} from "@angular/material/datepicker";
 import {FormControl} from "../../models/form-control";
@@ -12,22 +12,23 @@ export class MatDatepickerDirective<D> extends AbstractFormDirective<D | null> i
 
     public readonly form = input<FormControl<D | null>>();
 
+    private readonly datePicker = inject<MatDatepickerInput<D | null>>(MatDatepickerInput);
     private readonly subscription = new Subscription();
 
-    public constructor(private readonly datePicker: MatDatepickerInput<D | null>) {
+    public constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                datePicker.writeValue(form());
-                datePicker.setDisabledState(form.disabled());
+                this.datePicker.writeValue(form());
+                this.datePicker.setDisabledState(form.disabled());
             }
         });
 
         this.subscription.add(
-            datePicker.dateChange.subscribe(date => {
+            this.datePicker.dateChange.subscribe(date => {
                 const form = this.form();
 
                 if (form) {

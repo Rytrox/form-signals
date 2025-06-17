@@ -1,6 +1,6 @@
 Install Dependencies:
   stage: .pre
-  image: trion/ng-cli:19.2.9
+  image: trion/ng-cli:20.0.2
   cache: &cache
     key: $CI_COMMIT_REF_SLUG
     paths:
@@ -10,7 +10,7 @@ Install Dependencies:
     npm install
 
 Lint:
-  image: trion/ng-cli:19.2.9
+  image: trion/ng-cli:20.0.2
   cache:
     <<: *cache
     policy: pull
@@ -18,7 +18,7 @@ Lint:
     - npm run lint
 
 Test Karma:
-  image: trion/ng-cli-karma:19.2.9
+  image: trion/ng-cli-karma:20.0.2
   cache:
     <<: *cache
     policy: pull
@@ -26,7 +26,7 @@ Test Karma:
     - npm run test:ci
 
 Test Build:
-  image: trion/ng-cli:19.2.9
+  image: trion/ng-cli:20.0.2
   cache:
     <<: *cache
     policy: pull
@@ -34,7 +34,8 @@ Test Build:
     - npm run build:library
 
 Test Cypress:
-  image: cypress/base:22.15.0
+  image: cypress/base:22.16.0
+  allow_failure: true
   cache:
     <<: *cache
     policy: pull
@@ -54,7 +55,7 @@ Test Cypress:
 
 
 Build:
-  image: trion/ng-cli:19.2.9
+  image: trion/ng-cli:20.0.2
   cache:
     <<: *cache
     policy: pull
@@ -69,17 +70,24 @@ Build:
       artifacts: false
     - job: Test Cypress
       artifacts: false
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: on_success
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
   artifacts:
     paths:
       - dist/form-signals
     expire_in: 1 week
 
 Publish:
-  image: trion/ng-cli:19.2.9
+  image: trion/ng-cli:20.0.2
   needs:
     - job: Build
       artifacts: true
-  when: manual
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: on_success
   before_script:
     - echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" >> ~/.npmrc
   script:

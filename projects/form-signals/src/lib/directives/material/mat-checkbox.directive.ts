@@ -1,4 +1,4 @@
-import {Directive, effect, HostListener, input, Self} from '@angular/core';
+import { Directive, effect, HostListener, input, inject } from '@angular/core';
 import {MatCheckbox} from "@angular/material/checkbox";
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
@@ -11,9 +11,9 @@ export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
 
     public readonly form = input<FormControl<boolean>>();
 
-    public constructor(
-        @Self() private readonly element: MatCheckbox,
-    ) {
+    private readonly element = inject(MatCheckbox, { self: true });
+
+    public constructor() {
         super();
 
         // Update input when form value is updated
@@ -21,8 +21,8 @@ export class MatCheckboxDirective extends AbstractFormDirective<boolean> {
             const form = this.form();
 
             if (form) {
-                element.writeValue(form());
-                element.setDisabledState(form.disabled());
+                this.element.writeValue(form());
+                this.element.setDisabledState(form.disabled());
             }
         });
     }

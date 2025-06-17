@@ -1,4 +1,4 @@
-import {Directive, effect, HostListener, input} from '@angular/core';
+import { Directive, effect, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatSelect, MatSelectChange} from "@angular/material/select";
 import {FormControl} from "../../models/form-control";
@@ -11,15 +11,17 @@ export class MatSelectDirective<T> extends AbstractFormDirective<T | null | T[]>
 
     public readonly form = input<FormControl<T> | FormControl<T | null> | FormControl<T[]>>();
 
-    constructor(private readonly element: MatSelect) {
+    private readonly element = inject(MatSelect);
+
+    constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                element.writeValue(form());
-                element.setDisabledState(form.disabled());
+                this.element.writeValue(form());
+                this.element.setDisabledState(form.disabled());
             }
         });
     }

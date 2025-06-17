@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -10,15 +10,17 @@ export class SelectDirective extends AbstractFormDirective<string> {
 
     public readonly form = input<FormControl<string>>();
 
-    public constructor(private readonly element: ElementRef<HTMLSelectElement>) {
+    private readonly element = inject<ElementRef<HTMLSelectElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                element.nativeElement.value = form();
-                element.nativeElement.disabled = form.disabled();
+                this.element.nativeElement.value = form();
+                this.element.nativeElement.disabled = form.disabled();
             }
         });
     }
