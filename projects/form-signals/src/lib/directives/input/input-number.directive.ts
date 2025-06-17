@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -10,9 +10,9 @@ export class InputNumberDirective extends AbstractFormDirective<number> {
 
     public readonly form = input<FormControl<number>>();
 
-    public constructor(
-        private readonly element: ElementRef<HTMLInputElement>,
-    ) {
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         // Update input when form value is updated
@@ -20,8 +20,8 @@ export class InputNumberDirective extends AbstractFormDirective<number> {
             const form = this.form();
 
             if (form) {
-                element.nativeElement.valueAsNumber = form();
-                element.nativeElement.disabled = form.disabled();
+                this.element.nativeElement.valueAsNumber = form();
+                this.element.nativeElement.disabled = form.disabled();
             }
         });
     }

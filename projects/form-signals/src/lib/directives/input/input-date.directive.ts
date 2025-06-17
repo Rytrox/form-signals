@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -10,17 +10,17 @@ export class InputDateDirective extends AbstractFormDirective<Date | null> {
 
     public readonly form = input<FormControl<Date | null>>();
 
-    public constructor(
-        private readonly element: ElementRef<HTMLInputElement>
-    ) {
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                element.nativeElement.valueAsDate = form();
-                element.nativeElement.disabled = form.disabled();
+                this.element.nativeElement.valueAsDate = form();
+                this.element.nativeElement.disabled = form.disabled();
             }
         });
     }

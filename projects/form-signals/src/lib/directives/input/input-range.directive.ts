@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -10,7 +10,9 @@ export class InputRangeDirective extends AbstractFormDirective<number> {
 
     public readonly form = input<FormControl<number>>();
 
-    public constructor(private readonly element: ElementRef<HTMLInputElement>) {
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         effect(() => {

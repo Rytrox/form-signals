@@ -1,4 +1,4 @@
-import {Directive, effect, HostListener, input} from '@angular/core';
+import { Directive, effect, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatSlideToggle} from "@angular/material/slide-toggle";
 import {FormControl} from "../../models/form-control";
@@ -11,15 +11,17 @@ export class MatSlideToggleDirective extends AbstractFormDirective<boolean> {
 
     public readonly form = input<FormControl<boolean>>();
 
-    public constructor(private element: MatSlideToggle) {
+    private readonly element = inject(MatSlideToggle);
+
+    public constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                element.writeValue(form());
-                element.setDisabledState(form.disabled());
+                this.element.writeValue(form());
+                this.element.setDisabledState(form.disabled());
             }
         });
     }

@@ -1,4 +1,4 @@
-import {booleanAttribute, Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { booleanAttribute, Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -11,7 +11,9 @@ export class InputFileDirective extends AbstractFormDirective<File | File[] | nu
     public readonly multiple = input(false, {transform: booleanAttribute});
     public readonly form = input<FormControl<File | null> | FormControl<File[] | null>>();
 
-    public constructor(private element: ElementRef<HTMLInputElement>) {
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         effect(() => {
@@ -28,12 +30,12 @@ export class InputFileDirective extends AbstractFormDirective<File | File[] | nu
                         list.items.add(val);
                     }
 
-                    element.nativeElement.files = list.files;
+                    this.element.nativeElement.files = list.files;
                 } else {
-                    element.nativeElement.files = null;
+                    this.element.nativeElement.files = null;
                 }
 
-                element.nativeElement.disabled = form.disabled();
+                this.element.nativeElement.disabled = form.disabled();
             }
         });
     }

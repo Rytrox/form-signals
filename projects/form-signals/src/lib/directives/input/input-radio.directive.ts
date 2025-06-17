@@ -1,4 +1,4 @@
-import {Directive, effect, ElementRef, HostListener, input} from '@angular/core';
+import { Directive, effect, ElementRef, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {FormControl} from "../../models/form-control";
 
@@ -10,8 +10,9 @@ export class InputRadioDirective extends AbstractFormDirective<string> {
 
     public readonly form = input<FormControl<string>>();
 
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
-    constructor(private element: ElementRef<HTMLInputElement>) {
+    public constructor() {
         super();
 
         effect(() => {

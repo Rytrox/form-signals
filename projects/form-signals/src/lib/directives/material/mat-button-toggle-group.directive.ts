@@ -1,4 +1,4 @@
-import {Directive, effect, HostListener, input} from '@angular/core';
+import { Directive, effect, HostListener, input, inject } from '@angular/core';
 import {AbstractFormDirective} from "../abstract-form-directive";
 import {MatButtonToggleChange, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {FormControl} from "../../models/form-control";
@@ -11,15 +11,17 @@ export class MatButtonToggleGroupDirective<T> extends AbstractFormDirective<T | 
 
     public readonly form = input<FormControl<T> | FormControl<T[]>>();
 
-    public constructor(readonly element: MatButtonToggleGroup) {
+    public readonly element = inject(MatButtonToggleGroup);
+
+    public constructor() {
         super();
 
         effect(() => {
             const form = this.form();
 
             if (form) {
-                element.writeValue(form());
-                element.setDisabledState(form.disabled());
+                this.element.writeValue(form());
+                this.element.setDisabledState(form.disabled());
             }
         });
     }
